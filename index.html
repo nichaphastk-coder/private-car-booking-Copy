@@ -1,373 +1,203 @@
 
 <!DOCTYPE html>
 <html lang="th">
-
 <head>
-  <base target="_top">
-
   <meta charset="UTF-8">
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1"
-  >
-
+  <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Private Car | Booking</title>
-
-  <!-- LINE LIFF SDK -->
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 
   <style>
-
     :root {
-      --green: #35513b;
-      --green-dark: #29432f;
-      --sage: #dfe8d9;
-      --sage-light: #f0f4ec;
-      --background: #f8f8f2;
-      --yellow: #f6e6a7;
-      --red: #e8b8b1;
-      --white: #ffffff;
-      --muted: #718371;
+      --green:#35513b;
+      --sage:#dfe8d9;
+      --bg:#f8f8f2;
+      --yellow:#f6e6a7;
+      --red:#e8b8b1;
+      --muted:#718371;
     }
-
-    * {
-      box-sizing: border-box;
-    }
-
+    * { box-sizing:border-box; }
     body {
-      margin: 0;
-      background: var(--background);
-      color: var(--green);
-      font-family: Arial, sans-serif;
-      font-size: 14px;
+      margin:0;
+      background:var(--bg);
+      color:var(--green);
+      font-family:Arial,sans-serif;
+      font-size:14px;
     }
-
     main {
-      max-width: 510px;
-      margin: 32px auto;
-      padding: 0 14px 40px;
+      max-width:510px;
+      margin:32px auto;
+      padding:0 14px 40px;
     }
-
-    header {
-      text-align: center;
-      margin-bottom: 24px;
-    }
-
-    h1 {
-      font-size: 28px;
-      margin: 0 0 8px;
-    }
-
+    header { text-align:center; margin-bottom:24px; }
+    h1 { margin:0 0 8px; font-size:28px; }
     header small {
-      letter-spacing: 2px;
-      color: var(--muted);
-      font-size: 11px;
+      letter-spacing:2px;
+      color:var(--muted);
+      font-size:11px;
     }
-
-    h3 {
-      margin: 0 0 14px;
-      font-size: 17px;
-    }
-
     .card {
-      background: white;
-      border-radius: 16px;
-      padding: 15px;
-      margin: 16px 0;
+      background:white;
+      border-radius:16px;
+      padding:15px;
+      margin:16px 0;
     }
-
-    .hidden {
-      display: none !important;
+    .hidden { display:none!important; }
+    .hint,.loading {
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.6;
     }
-
-    .hint {
-      font-size: 12px;
-      color: var(--muted);
-      line-height: 1.6;
-    }
-
+    h3 { font-size:17px; margin:0 0 14px; }
     button {
-      font: inherit;
-      cursor: pointer;
-      border: none;
-      border-radius: 9px;
-      padding: 11px 14px;
-      background: var(--sage);
-      color: var(--green);
+      font:inherit;
+      cursor:pointer;
+      border:0;
+      border-radius:9px;
+      padding:11px 14px;
+      background:var(--sage);
+      color:var(--green);
     }
-
-    button:disabled {
-      opacity: 0.4;
-      cursor: not-allowed;
-    }
-
-    /* CALENDAR */
-
+    button:disabled { opacity:.4; cursor:not-allowed; }
     .monthbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 15px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:15px;
     }
-
-    .monthbar strong {
-      font-size: 17px;
-    }
-
+    .monthbar strong { font-size:17px; }
     .calendar {
-      display: grid;
-      grid-template-columns: repeat(7, minmax(0, 1fr));
-      gap: 5px;
+      display:grid;
+      grid-template-columns:repeat(7,minmax(0,1fr));
+      gap:5px;
     }
-
     .weekday {
-      text-align: center;
-      font-size: 10px;
-      padding: 6px 0;
-      color: var(--muted);
+      text-align:center;
+      padding:6px 0;
+      font-size:10px;
+      color:var(--muted);
     }
-
     .day {
-      min-height: 38px;
-      padding: 8px 0;
-      text-align: center;
+      min-height:38px;
+      padding:8px 0;
+      text-align:center;
     }
-
-    .day.available {
-      background: var(--sage);
-    }
-
-    .day.partial {
-      background: var(--yellow);
-    }
-
-    .day.fullyBooked {
-      background: var(--red);
-    }
-
+    .available { background:var(--sage); }
+    .partial { background:var(--yellow); }
+    .fullyBooked,.booked { background:var(--red); }
     .day.selected {
-      background: #638267;
-      color: white;
-      outline: 2px solid var(--green);
+      background:#638267;
+      color:white;
+      outline:2px solid var(--green);
     }
-
-    .day.past {
-      opacity: 0.3;
-      cursor: not-allowed;
-    }
-
+    .day.past { opacity:.3; }
     .legend {
-      display: flex;
-      justify-content: center;
-      gap: 12px;
-      font-size: 10px;
-      margin-top: 16px;
+      display:flex;
+      justify-content:center;
+      gap:12px;
+      margin-top:16px;
+      font-size:10px;
     }
-
     .dot {
-      display: inline-block;
-      width: 10px;
-      height: 10px;
-      border-radius: 3px;
-      margin-right: 4px;
+      display:inline-block;
+      width:10px;
+      height:10px;
+      border-radius:3px;
+      margin-right:4px;
     }
-
-    /* PACKAGE */
-
-    .packages {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 9px;
-    }
-
+    .packages { display:grid; gap:9px; }
     .choice {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 13px;
-      border: 1px solid #dce5d7;
-      border-radius: 10px;
-      background: #f2f5ee;
-      cursor: pointer;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding:13px;
+      border:1px solid #dce5d7;
+      border-radius:10px;
+      background:#f2f5ee;
+      cursor:pointer;
     }
-
     .choice:has(input:checked) {
-      background: #d9e7d3;
-      border-color: #58775d;
-      font-weight: bold;
+      background:#d9e7d3;
+      border-color:#58775d;
+      font-weight:bold;
     }
-
-    .choice:has(input:disabled) {
-      opacity: 0.45;
-      cursor: not-allowed;
+    .choice:has(input:disabled) { opacity:.45; }
+    input[type=checkbox] {
+      accent-color:#53745a;
+      width:17px;
+      height:17px;
     }
-
-    input[type="checkbox"] {
-      accent-color: #53745a;
-      width: 17px;
-      height: 17px;
-      flex-shrink: 0;
-    }
-
-    /* HOURLY SLOTS */
-
     .slotgrid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 7px;
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:7px;
     }
-
     .slot {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      border-radius: 9px;
-      padding: 12px 4px;
-      font-size: 11px;
-      min-height: 64px;
-      cursor: pointer;
-      text-align: center;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      gap:6px;
+      min-height:75px;
+      padding:12px 4px;
+      border-radius:9px;
+      font-size:11px;
+      cursor:pointer;
+      text-align:center;
     }
-
-    .slot.available {
-      background: var(--sage);
-    }
-
-    .slot.booked {
-      background: var(--red);
-    }
-
     .slot:has(input:checked) {
-      background: #b9d3b2;
-      outline: 2px solid var(--green);
+      background:#b9d3b2;
+      outline:2px solid var(--green);
     }
-
-    .slot:has(input:disabled) {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-
-    .slot input {
-      margin: 0;
-    }
-
-    /* SUMMARY */
-
+    .slot:has(input:disabled) { opacity:.5; }
     .summary {
-      white-space: pre-line;
-      background: #edf3e9;
-      padding: 15px;
-      border-radius: 11px;
-      line-height: 1.8;
-      margin-top: 12px;
-      overflow-wrap: anywhere;
+      white-space:pre-line;
+      background:#edf3e9;
+      padding:15px;
+      border-radius:11px;
+      line-height:1.8;
+      overflow-wrap:anywhere;
     }
-
     .primary {
-      width: 100%;
-      background: var(--green);
-      color: white;
-      font-weight: bold;
-      margin-top: 16px;
-      padding: 15px;
-      font-size: 15px;
+      width:100%;
+      margin-top:16px;
+      padding:15px;
+      background:var(--green);
+      color:white;
+      font-size:15px;
+      font-weight:bold;
     }
-
-    .primary:not(:disabled):active {
-      background: var(--green-dark);
-    }
-
     .status {
-      font-size: 12px;
-      line-height: 1.6;
-      margin-top: 12px;
-      overflow-wrap: anywhere;
+      margin-top:12px;
+      font-size:12px;
+      line-height:1.6;
+      overflow-wrap:anywhere;
     }
-
-    .status.success {
-      color: #287747;
-    }
-
-    .status.error {
-      color: #a23b31;
-    }
-
-    .loading {
-      font-size: 12px;
-      color: var(--muted);
-      margin-top: 10px;
-    }
-
+    .error { color:#a23b31; }
+    .success { color:#287747; }
   </style>
-
 </head>
 
 <body>
-
 <main>
-
   <header>
     <h1>Private Car</h1>
     <small>CHECK AVAILABILITY & BOOKING</small>
   </header>
 
-
-  <!-- CALENDAR -->
-
   <section class="card">
-
     <div class="monthbar">
-
-      <button
-        id="prev"
-        onclick="changeMonth(-1)"
-        aria-label="Previous month"
-      >
-        ❮
-      </button>
-
+      <button id="prev" onclick="changeMonth(-1)">❮</button>
       <strong id="monthTitle"></strong>
-
-      <button
-        onclick="changeMonth(1)"
-        aria-label="Next month"
-      >
-        ❯
-      </button>
-
+      <button onclick="changeMonth(1)">❯</button>
     </div>
 
     <div id="calendar" class="calendar"></div>
 
     <div class="legend">
-
-      <span>
-        <i
-          class="dot"
-          style="background:#dfe8d9"
-        ></i>
-        Available
-      </span>
-
-      <span>
-        <i
-          class="dot"
-          style="background:#f6e6a7"
-        ></i>
-        Partial
-      </span>
-
-      <span>
-        <i
-          class="dot"
-          style="background:#e8b8b1"
-        ></i>
-        Fully Booked
-      </span>
-
+      <span><i class="dot" style="background:#dfe8d9"></i>Available</span>
+      <span><i class="dot" style="background:#f6e6a7"></i>Partial</span>
+      <span><i class="dot" style="background:#e8b8b1"></i>Fully Booked</span>
     </div>
 
     <p class="hint">
@@ -376,899 +206,167 @@
     </p>
 
     <div id="monthLoading" class="loading"></div>
-
   </section>
 
-
-  <!-- BOOKING PANEL -->
-
-  <section
-    class="card hidden"
-    id="bookingPanel"
-  >
-
+  <section id="bookingPanel" class="card hidden">
     <h3>Choose Your Booking</h3>
-
     <p id="selectedDate" class="hint"></p>
+    <div id="dayLoading" class="loading"></div>
 
-    <div
-      id="dayLoading"
-      class="loading"
-    ></div>
-
-    <div
-      id="bookingControls"
-      class="hidden"
-    >
-
-      <!-- PACKAGES -->
-
+    <div id="bookingControls" class="hidden">
       <h3>Packages</h3>
-
-      <div
-        id="packages"
-        class="packages"
-      ></div>
+      <div id="packages" class="packages"></div>
 
       <p class="hint">
-        เลือกแพ็กเกจได้ 1 แบบ
-        หรือเลือก Slot รายชั่วโมงหลายช่องแทนแพ็กเกจ
+        เลือกแพ็กเกจได้ 1 แบบ หรือเลือก Slot
+        รายชั่วโมงหลายช่องแทนแพ็กเกจ
       </p>
 
-
-      <!-- SLOTS -->
-
       <h3>Hourly Slots</h3>
-
       <p class="hint">
-        สามารถเลือกช่วงเวลาที่ว่างพร้อมกันได้หลายช่อง
+        สามารถเลือกเวลาที่ว่างพร้อมกันได้หลายช่อง
         ช่องละ 1 ชั่วโมง
       </p>
 
-      <div
-        id="slots"
-        class="slotgrid"
-      ></div>
+      <div id="slots" class="slotgrid"></div>
 
+      <h3 style="margin-top:22px">Booking Summary</h3>
 
-      <!-- SUMMARY -->
-
-      <h3 style="margin-top:22px">
-        Booking Summary
-      </h3>
-
-      <div
-        id="summary"
-        class="summary"
-      >
+      <div id="summary" class="summary">
         Please select a package or time slots.
       </div>
-
-
-      <!-- SEND TO LINE -->
 
       <button
         id="sendBtn"
         class="primary"
         onclick="submitBooking()"
-        disabled
-      >
+        disabled>
         Send Booking Request to LINE
       </button>
 
-<button
-  type="button"
-  onclick="checkLiffStatus()"
-  style="width:100%;margin-top:10px;"
->
-  Test LINE Connection
-</button>
+      <button
+        style="width:100%;margin-top:10px"
+        onclick="checkLiffStatus()">
+        Test LINE Connection
+      </button>
 
-      <p
-        id="sendStatus"
-        class="status"
-        aria-live="polite"
-      ></p>
-
+      <p id="sendStatus" class="status" aria-live="polite"></p>
     </div>
-
   </section>
-
 </main>
 
-
 <script>
+/* =========================================
+   1. CONFIGURATION
+========================================= */
 
-  // ==========================================
-  // 1. CONFIGURATION
-  // ==========================================
+const GAS_API_URL =
+  'https://script.google.com/macros/s/AKfycbzdpANU6-SOSlRZ7h6PJI_m_h5TSmDhieq_MeywhE-TNW16VGB02VA6HRMX_Hz_QvTNeg/exec';
 
-  // ใส่ LIFF ID จริงของคุณตรงนี้
-  const LIFF_ID = '2011823100-GSlF8xOA';
+const LIFF_ID = '2011823100-GSlF8xOA';
 
-  const $ = id =>
-    document.getElementById(id);
+const $ = id => document.getElementById(id);
 
-  const pad = n =>
-    String(n).padStart(2, '0');
+let liffReady = false;
+let viewDate = new Date();
+let selectedDate = '';
+let selectedPackage = '';
+let selectedSlots = new Set();
+let monthStatuses = {};
+let dayData = null;
+let bookingSent = false;
+let apiCounter = 0;
+let monthRequest = 0;
+let dayRequest = 0;
 
-  const dateKey = (year, month, day) =>
-    `${year}-${pad(month)}-${pad(day)}`;
+viewDate.setDate(1);
 
-  const today = new Date();
+/* =========================================
+   2. GOOGLE APPS SCRIPT API (JSONP)
+========================================= */
 
-  today.setHours(0, 0, 0, 0);
+function api(action, params = {}) {
+  return new Promise((resolve, reject) => {
+    const callback = 'privateCarCb_' + (++apiCounter);
+    const script = document.createElement('script');
+    const url = new URL(GAS_API_URL);
 
-  const todayKey = dateKey(
-    today.getFullYear(),
-    today.getMonth() + 1,
-    today.getDate()
-  );
+    url.searchParams.set('action', action);
+    url.searchParams.set('callback', callback);
 
-  let viewYear = today.getFullYear();
+    Object.entries(params).forEach(([key, value]) => {
+      url.searchParams.set(key, String(value));
+    });
 
-  let viewMonth = today.getMonth() + 1;
+    let finished = false;
+    let timer;
 
-  let monthStatuses = {};
+    function cleanup() {
+      clearTimeout(timer);
+      script.remove();
+      delete window[callback];
+    }
 
-  let selectedDate = '';
+    function fail(error) {
+      if (finished) return;
+      finished = true;
+      cleanup();
+      reject(error);
+    }
 
-  let dayData = null;
+    window[callback] = function(response) {
+      if (finished) return;
+      finished = true;
+      cleanup();
 
-  let selectedPackage = '';
-
-  let selectedSlots = new Set();
-
-  let liffReady = false;
-
-  let bookingSent = false;
-
-
-  // ==========================================
-  // 2. INITIALIZE LIFF
-  // ==========================================
-
-  async function setupLiff() {
-
-    try {
-
-      if (
-        !LIFF_ID ||
-        LIFF_ID === 'YOUR_LIFF_ID_HERE'
-      ) {
-
-        console.warn(
-          'Please configure your LIFF ID.'
-        );
-
-        return;
+      if (response && response.ok) {
+        resolve(response.data);
+      } else {
+        reject(new Error(
+          response?.error || 'API error'
+        ));
       }
-
-      await liff.init({
-        liffId: LIFF_ID
-      });
-
-      liffReady = true;
-
-      console.log('LIFF initialized');
-
-      console.log(
-        'In LINE:',
-        liff.isInClient()
-      );
-
-      console.log(
-        'Context:',
-        liff.getContext()
-      );
-
-    } catch (error) {
-
-      liffReady = false;
-
-      console.error(
-        'LIFF initialization failed:',
-        error
-      );
-
-    }
-
-  }
-
-
-  // ==========================================
-  // 3. CHANGE MONTH
-  // ==========================================
-
-  function changeMonth(delta) {
-
-    viewMonth += delta;
-
-    if (viewMonth > 12) {
-
-      viewMonth = 1;
-      viewYear++;
-
-    }
-
-    if (viewMonth < 1) {
-
-      viewMonth = 12;
-      viewYear--;
-
-    }
-
-    loadMonth();
-
-  }
-
-
-  // ==========================================
-  // 4. LOAD MONTH
-  // ==========================================
-
-  function loadMonth() {
-
-    $('monthTitle').textContent =
-      new Intl.DateTimeFormat('en-US', {
-
-        month: 'long',
-        year: 'numeric'
-
-      }).format(
-
-        new Date(
-          viewYear,
-          viewMonth - 1,
-          1
-        )
-
-      );
-
-    $('prev').disabled =
-      viewYear === today.getFullYear() &&
-      viewMonth === today.getMonth() + 1;
-
-    $('monthLoading').textContent =
-      'Loading calendar…';
-
-    const requestedMonth =
-      `${viewYear}-${viewMonth}`;
-
-    google.script.run
-
-      .withSuccessHandler(function(result) {
-
-        if (
-          requestedMonth !==
-          `${viewYear}-${viewMonth}`
-        ) {
-          return;
-        }
-
-        monthStatuses = result || {};
-
-        $('monthLoading').textContent = '';
-
-        renderCalendar();
-
-      })
-
-      .withFailureHandler(function(error) {
-
-        $('monthLoading').textContent =
-          'Unable to load calendar: ' +
-          error.message;
-
-      })
-
-      .getMonthAvailability(
-        viewYear,
-        viewMonth
-      );
-
-  }
-
-
-  // ==========================================
-  // 5. RENDER CALENDAR
-  // ==========================================
-
-  function renderCalendar() {
-
-    const calendar = $('calendar');
-
-    calendar.innerHTML = '';
-
-    const weekdays = [
-      'SUN',
-      'MON',
-      'TUE',
-      'WED',
-      'THU',
-      'FRI',
-      'SAT'
-    ];
-
-    weekdays.forEach(function(day) {
-
-      const element =
-        document.createElement('div');
-
-      element.className = 'weekday';
-
-      element.textContent = day;
-
-      calendar.appendChild(element);
-
-    });
-
-    const firstDay = new Date(
-      viewYear,
-      viewMonth - 1,
-      1
-    ).getDay();
-
-    const daysInMonth = new Date(
-      viewYear,
-      viewMonth,
-      0
-    ).getDate();
-
-    for (
-      let i = 0;
-      i < firstDay;
-      i++
-    ) {
-
-      calendar.appendChild(
-        document.createElement('div')
-      );
-
-    }
-
-    for (
-      let day = 1;
-      day <= daysInMonth;
-      day++
-    ) {
-
-      const key = dateKey(
-        viewYear,
-        viewMonth,
-        day
-      );
-
-      const button =
-        document.createElement('button');
-
-      const status =
-        monthStatuses[key] || 'available';
-
-      button.className =
-        'day ' +
-        status +
-        (key === selectedDate
-          ? ' selected'
-          : '') +
-        (key < todayKey
-          ? ' past'
-          : '');
-
-      button.textContent = day;
-
-      button.disabled =
-        key < todayKey;
-
-      button.onclick = function() {
-
-        selectDate(key);
-
-      };
-
-      calendar.appendChild(button);
-
-    }
-
-  }
-
-
-  // ==========================================
-  // 6. SELECT DATE
-  // ==========================================
-
-  function selectDate(key) {
-
-    selectedDate = key;
-
-    selectedPackage = '';
-
-    selectedSlots.clear();
-
-    dayData = null;
-
-    bookingSent = false;
-
-    renderCalendar();
-
-    $('bookingPanel').classList.remove(
-      'hidden'
-    );
-
-    $('bookingControls').classList.add(
-      'hidden'
-    );
-
-    $('selectedDate').textContent =
-      new Intl.DateTimeFormat('en-US', {
-
-        weekday: 'long',
-        day: 'numeric',
-        month: 'long',
-        year: 'numeric'
-
-      }).format(
-
-        new Date(
-          key + 'T12:00:00'
-        )
-
-      );
-
-    $('dayLoading').textContent =
-      'Checking available times…';
-
-    $('sendStatus').textContent = '';
-
-    $('sendStatus').className = 'status';
-
-    google.script.run
-
-      .withSuccessHandler(function(result) {
-
-        if (selectedDate !== key) {
-          return;
-        }
-
-        dayData = result;
-
-        $('dayLoading').textContent = '';
-
-        $('bookingControls').classList.remove(
-          'hidden'
-        );
-
-        renderOptions();
-
-      })
-
-      .withFailureHandler(function(error) {
-
-        $('dayLoading').textContent =
-          'Unable to check availability: ' +
-          error.message;
-
-      })
-
-      .getDayAvailability(key);
-
-  }
-
-
-  // ==========================================
-  // 7. PACKAGE + SLOT CHECKBOXES
-  // ==========================================
-
-  function renderOptions() {
-
-    const packageContainer = $('packages');
-
-    packageContainer.innerHTML = '';
-
-    // PACKAGE CHECKBOXES
-
-    ['full', 'am', 'pm'].forEach(function(key) {
-
-      const pkg =
-        dayData.packages[key];
-
-      const label =
-        document.createElement('label');
-
-      label.className = 'choice';
-
-      const checkbox =
-        document.createElement('input');
-
-      checkbox.type = 'checkbox';
-
-      checkbox.checked =
-        selectedPackage === key;
-
-      checkbox.disabled =
-        !pkg.available;
-
-      checkbox.onchange = function() {
-
-        selectedPackage =
-          checkbox.checked ? key : '';
-
-        if (selectedPackage) {
-
-          selectedSlots.clear();
-
-        }
-
-        bookingSent = false;
-
-        renderOptions();
-
-      };
-
-      const text =
-        document.createElement('span');
-
-      text.textContent =
-        `${pkg.name} (${pkg.start}–${pkg.end})` +
-        (pkg.available
-          ? ''
-          : ' — Unavailable');
-
-      label.append(
-        checkbox,
-        text
-      );
-
-      packageContainer.appendChild(label);
-
-    });
-
-
-    // HOURLY SLOT CHECKBOXES
-
-    const slotContainer = $('slots');
-
-    slotContainer.innerHTML = '';
-
-    dayData.slots.forEach(function(slot) {
-
-      const label =
-        document.createElement('label');
-
-      label.className =
-        'slot ' + slot.status;
-
-      const checkbox =
-        document.createElement('input');
-
-      checkbox.type = 'checkbox';
-
-      checkbox.checked =
-        selectedSlots.has(slot.time);
-
-      checkbox.disabled =
-        slot.status !== 'available' ||
-        Boolean(selectedPackage);
-
-      checkbox.onchange = function() {
-
-        if (checkbox.checked) {
-
-          selectedSlots.add(slot.time);
-
-        } else {
-
-          selectedSlots.delete(slot.time);
-
-        }
-
-        bookingSent = false;
-
-        updateSummary();
-
-      };
-
-      const timeText =
-        document.createElement('span');
-
-      timeText.textContent =
-        slot.time;
-
-      const statusText =
-        document.createElement('small');
-
-      statusText.textContent =
-        slot.status === 'available'
-          ? 'Available'
-          : 'Booked';
-
-      label.append(
-        checkbox,
-        timeText,
-        statusText
-      );
-
-      slotContainer.appendChild(label);
-
-    });
-
-    updateSummary();
-
-  }
-
-
-  // ==========================================
-  // 8. GENERATE BOOKING MESSAGE
-  // ==========================================
-
-  function messageText() {
-
-    let message =
-      '🚗 PRIVATE CAR — Booking Request\n' +
-      `📅 Date: ${selectedDate}\n`;
-
-    if (selectedPackage) {
-
-      const pkg =
-        dayData.packages[selectedPackage];
-
-      message +=
-        `📦 Package: ${pkg.name}\n` +
-        `🕒 Time: ${pkg.start}–${pkg.end}`;
-
-    } else if (selectedSlots.size > 0) {
-
-      const chosenSlots =
-        [...selectedSlots].sort();
-
-      message +=
-        '📦 Hourly Booking\n' +
-        '🕒 Selected Slots:\n' +
-        chosenSlots.join('\n') +
-        `\nTotal: ${chosenSlots.length} hour(s)`;
-
-    } else {
-
-      return '';
-
-    }
-
-    message +=
-      '\n\nPlease check availability ' +
-      'and confirm the price. 💚';
-
-    return message;
-
-  }
-
-
-  // ==========================================
-  // 9. UPDATE BOOKING SUMMARY
-  // ==========================================
-
-  function updateSummary() {
-
-    $('summary').textContent =
-      messageText() ||
-      'Please select a package or time slots.';
-
-    $('sendBtn').disabled =
-      !messageText() || bookingSent;
-
-    if (!bookingSent) {
-
-      $('sendBtn').textContent =
-        'Send Booking Request to LINE';
-
-    }
-
-  }
-
-
-  // ==========================================
-  // 10. SEND BOOKING DIRECTLY TO LINE
-  // ==========================================
-
-  async function submitBooking() {
-
-    const button = $('sendBtn');
-
-    const status = $('sendStatus');
-
-    const originalDate = selectedDate;
-
-    const originalPackage = selectedPackage;
-
-    const originalSlots =
-      [...selectedSlots];
-
-    const originalMessage =
-      messageText();
-
-    if (!originalMessage) {
-      return;
-    }
-
-    const request = {
-
-      date: originalDate,
-
-      package: originalPackage,
-
-      slots: originalSlots
-
     };
 
-    button.disabled = true;
+    script.onerror = () => fail(
+      new Error('Unable to reach Google Apps Script API')
+    );
 
-    status.className = 'status';
+    timer = setTimeout(
+      () => fail(new Error('API timeout')),
+      45000
+    );
 
-    status.textContent =
-      'Checking availability…';
+    script.src = url.toString();
+    document.head.appendChild(script);
+  });
+}
 
-    // ตรวจสอบคิวจาก Google Calendar อีกครั้ง
-    google.script.run
+/* =========================================
+   3. LINE LIFF
+========================================= */
 
-      .withSuccessHandler(async function(result) {
+async function setupLiff() {
+  try {
+    if (typeof liff === 'undefined') {
+      throw new Error('LINE LIFF SDK could not be loaded');
+    }
 
-        // ป้องกันกรณีลูกค้าเปลี่ยนรายการ
-        // ระหว่างรอการตรวจสอบคิว
+    await liff.init({ liffId: LIFF_ID });
+    liffReady = true;
 
-        if (
-          selectedDate !== originalDate ||
-          selectedPackage !== originalPackage ||
-          JSON.stringify([...selectedSlots].sort()) !==
-          JSON.stringify([...originalSlots].sort())
-        ) {
+    console.log('LIFF initialized', {
+      inClient: liff.isInClient(),
+      context: liff.getContext()
+    });
 
-          status.textContent =
-            'Booking selection changed. Please submit again.';
-
-          button.disabled = false;
-
-          return;
-
-        }
-
-        if (!result.valid) {
-
-          status.className = 'status error';
-
-          status.textContent =
-            '❌ ' +
-            result.message +
-            ' กรุณาเลือกใหม่ค่ะ';
-
-          button.disabled = false;
-
-          return;
-
-        }
-
-        try {
-
-          // ตรวจสอบ LIFF ID
-          if (
-            !LIFF_ID ||
-            LIFF_ID === 'YOUR_LIFF_ID_HERE'
-          ) {
-
-            throw new Error(
-              'ยังไม่ได้ตั้งค่า LIFF ID ใน Index.html'
-            );
-
-          }
-
-          // เริ่มต้น LIFF หากยังไม่พร้อม
-          if (!liffReady) {
-
-            await liff.init({
-              liffId: LIFF_ID
-            });
-
-            liffReady = true;
-
-          }
-
-          // ต้องเปิดผ่านแอป LINE
-          if (!liff.isInClient()) {
-
-            throw new Error(
-              'กรุณาเปิดหน้าจองผ่าน LIFF URL ' +
-              'จากห้องแชท LINE OA โดยตรง'
-            );
-
-          }
-
-          // ตรวจสอบบริบทของห้องแชท
-          const context =
-            liff.getContext();
-
-          if (
-            !context ||
-            !['utou', 'room', 'group'].includes(
-              context.type
-            )
-          ) {
-
-            throw new Error(
-              'ไม่พบห้องแชทที่รองรับการส่งข้อความ ' +
-              'กรุณาเปิด LIFF จากแชท LINE OA'
-            );
-
-          }
-
-          status.textContent =
-            'Sending booking request to LINE…';
-
-          // ส่งข้อความกลับเข้าแชท LINE โดยตรง
-          await liff.sendMessages([
-
-            {
-              type: 'text',
-              text: originalMessage
-            }
-
-          ]);
-
-          // ส่งสำเร็จ
-          bookingSent = true;
-
-          status.className =
-            'status success';
-
-          status.textContent =
-            '✅ ส่งคำขอจองเข้าแชท LINE สำเร็จแล้วค่ะ 💚';
-
-          button.textContent =
-            'Booking Request Sent ✓';
-
-          button.disabled = true;
-
-        } catch (error) {
-
-          console.error(
-            'LINE send error:',
-            error
-          );
-
-          status.className =
-            'status error';
-
-          status.textContent =
-            '❌ ไม่สามารถส่งคำขอจองได้: ' +
-            (error.message || String(error));
-
-          button.disabled = false;
-
-        }
-
-      })
-
-      .withFailureHandler(function(error) {
-
-        status.className =
-          'status error';
-
-        status.textContent =
-          '❌ ตรวจสอบคิวไม่สำเร็จ: ' +
-          error.message;
-
-        button.disabled = false;
-
-      })
-
-      .validateBookingSelection(request);
-
+  } catch (error) {
+    liffReady = false;
+    console.error('LIFF initialization failed:', error);
   }
-
-
-  // ==========================================
-  // 11. START APPLICATION
-  // ==========================================
+}
 
 function checkLiffStatus() {
-
   const status = $('sendStatus');
 
   const info = {
@@ -1278,18 +376,416 @@ function checkLiffStatus() {
     url: window.location.href
   };
 
-  console.log('LIFF DEBUG:', info);
-
   status.textContent =
     'LIFF Debug: ' + JSON.stringify(info);
-
 }
 
-  setupLiff();
+/* =========================================
+   4. DATE HELPERS
+========================================= */
 
+function pad(number) {
+  return String(number).padStart(2, '0');
+}
+
+function dateKey(year, month, day) {
+  return year + '-' + pad(month) + '-' + pad(day);
+}
+
+function todayKey() {
+  const parts = new Intl.DateTimeFormat('en-CA', {
+    timeZone:'Asia/Bangkok',
+    year:'numeric',
+    month:'2-digit',
+    day:'2-digit'
+  }).formatToParts(new Date());
+
+  const get = type =>
+    parts.find(part => part.type === type).value;
+
+  return `${get('year')}-${get('month')}-${get('day')}`;
+}
+
+/* =========================================
+   5. LOAD MONTH
+========================================= */
+
+async function loadMonth() {
+  const year = viewDate.getFullYear();
+  const month = viewDate.getMonth() + 1;
+  const requestId = ++monthRequest;
+
+  $('monthTitle').textContent =
+    new Intl.DateTimeFormat('en-US', {
+      month:'long',
+      year:'numeric'
+    }).format(viewDate);
+
+  $('monthLoading').textContent = 'Loading calendar...';
+  $('calendar').innerHTML = '';
+
+  try {
+    const result = await api('month', { year, month });
+
+    if (requestId !== monthRequest) return;
+
+    monthStatuses = result;
+    renderCalendar();
+    $('monthLoading').textContent = '';
+
+  } catch (error) {
+    if (requestId !== monthRequest) return;
+
+    $('monthLoading').textContent =
+      'Unable to load calendar: ' + error.message;
+  }
+}
+
+function changeMonth(direction) {
+  viewDate.setMonth(viewDate.getMonth() + direction);
+
+  selectedDate = '';
+  selectedPackage = '';
+  selectedSlots.clear();
+  dayData = null;
+  ++dayRequest;
+
+  $('bookingPanel').classList.add('hidden');
   loadMonth();
+}
+
+/* =========================================
+   6. RENDER CALENDAR
+========================================= */
+
+function renderCalendar() {
+  const calendar = $('calendar');
+  calendar.innerHTML = '';
+
+  const year = viewDate.getFullYear();
+  const month = viewDate.getMonth() + 1;
+  const firstDay = new Date(year, month - 1, 1).getDay();
+  const daysInMonth = new Date(year, month, 0).getDate();
+  const today = todayKey();
+
+  ['SUN','MON','TUE','WED','THU','FRI','SAT']
+    .forEach(name => {
+      const element = document.createElement('div');
+      element.className = 'weekday';
+      element.textContent = name;
+      calendar.appendChild(element);
+    });
+
+  for (let i = 0; i < firstDay; i++) {
+    calendar.appendChild(document.createElement('div'));
+  }
+
+  for (let day = 1; day <= daysInMonth; day++) {
+    const key = dateKey(year, month, day);
+    const status = monthStatuses[key] || 'available';
+
+    const button = document.createElement('button');
+
+    button.className =
+      'day ' + status +
+      (key === selectedDate ? ' selected' : '') +
+      (key < today ? ' past' : '');
+
+    button.textContent = day;
+    button.disabled = key < today;
+
+    button.onclick = () => selectDate(key);
+
+    calendar.appendChild(button);
+  }
+}
+
+/* =========================================
+   7. SELECT DATE
+========================================= */
+
+async function selectDate(key) {
+  const requestId = ++dayRequest;
+
+  selectedDate = key;
+  selectedPackage = '';
+  selectedSlots.clear();
+  dayData = null;
+  bookingSent = false;
+
+  renderCalendar();
+
+  $('bookingPanel').classList.remove('hidden');
+  $('bookingControls').classList.add('hidden');
+
+  $('selectedDate').textContent =
+    new Intl.DateTimeFormat('en-US', {
+      weekday:'long',
+      day:'numeric',
+      month:'long',
+      year:'numeric'
+    }).format(new Date(key + 'T12:00:00'));
+
+  $('dayLoading').textContent =
+    'Checking available times...';
+
+  $('sendStatus').textContent = '';
+
+  try {
+    const result = await api('day', { date:key });
+
+    if (requestId !== dayRequest) return;
+
+    dayData = result;
+
+    $('dayLoading').textContent = '';
+    $('bookingControls').classList.remove('hidden');
+
+    renderOptions();
+
+  } catch (error) {
+    if (requestId !== dayRequest) return;
+
+    $('dayLoading').textContent =
+      'Unable to check availability: ' + error.message;
+  }
+}
+
+/* =========================================
+   8. PACKAGES AND MULTIPLE SLOTS
+========================================= */
+
+function renderOptions() {
+  const packageContainer = $('packages');
+  packageContainer.innerHTML = '';
+
+  ['full','am','pm'].forEach(key => {
+    const pkg = dayData.packages[key];
+
+    const label = document.createElement('label');
+    label.className = 'choice';
+
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.checked = selectedPackage === key;
+    checkbox.disabled = !pkg.available;
+
+    checkbox.onchange = () => {
+      selectedPackage = checkbox.checked ? key : '';
+
+      if (selectedPackage) {
+        selectedSlots.clear();
+      }
+
+      bookingSent = false;
+      renderOptions();
+    };
+
+    const text = document.createElement('span');
+
+    text.textContent =
+      `${pkg.name} (${pkg.start}–${pkg.end})` +
+      (pkg.available ? '' : ' — Unavailable');
+
+    label.append(checkbox, text);
+    packageContainer.appendChild(label);
+  });
+
+  const slotContainer = $('slots');
+  slotContainer.innerHTML = '';
+
+  dayData.slots.forEach(slot => {
+    const label = document.createElement('label');
+    label.className = 'slot ' + slot.status;
+
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.checked = selectedSlots.has(slot.time);
+
+    checkbox.disabled =
+      slot.status !== 'available' ||
+      Boolean(selectedPackage);
+
+    checkbox.onchange = () => {
+      if (checkbox.checked) {
+        selectedSlots.add(slot.time);
+      } else {
+        selectedSlots.delete(slot.time);
+      }
+
+      bookingSent = false;
+      updateSummary();
+    };
+
+    const time = document.createElement('span');
+    time.textContent = slot.time;
+
+    const availability = document.createElement('small');
+    availability.textContent =
+      slot.status === 'available' ? 'Available' : 'Booked';
+
+    label.append(checkbox, time, availability);
+    slotContainer.appendChild(label);
+  });
+
+  updateSummary();
+}
+
+/* =========================================
+   9. BOOKING SUMMARY
+========================================= */
+
+function messageText() {
+  let message =
+    '🚗 PRIVATE CAR — Booking Request\n' +
+    `📅 Date: ${selectedDate}\n`;
+
+  if (selectedPackage) {
+    const pkg = dayData.packages[selectedPackage];
+
+    message +=
+      `📦 Package: ${pkg.name}\n` +
+      `🕒 Time: ${pkg.start}–${pkg.end}`;
+
+  } else if (selectedSlots.size > 0) {
+    const slots = [...selectedSlots].sort();
+
+    message +=
+      '📦 Hourly Booking\n' +
+      '🕒 Selected Slots:\n' +
+      slots.join('\n') +
+      `\nTotal: ${slots.length} hour(s)`;
+
+  } else {
+    return '';
+  }
+
+  message +=
+    '\n\nPlease check availability and confirm the price. 💚';
+
+  return message;
+}
+
+function updateSummary() {
+  const message = messageText();
+
+  $('summary').textContent =
+    message || 'Please select a package or time slots.';
+
+  $('sendBtn').disabled = !message || bookingSent;
+
+  if (!bookingSent) {
+    $('sendBtn').textContent =
+      'Send Booking Request to LINE';
+  }
+}
+
+/* =========================================
+   10. SEND BOOKING REQUEST TO LINE
+========================================= */
+
+async function submitBooking() {
+  const button = $('sendBtn');
+  const status = $('sendStatus');
+
+  const originalDate = selectedDate;
+  const originalPackage = selectedPackage;
+  const originalSlots = [...selectedSlots];
+  const originalMessage = messageText();
+
+  if (!originalMessage) return;
+
+  button.disabled = true;
+  status.className = 'status';
+  status.textContent = 'Checking availability...';
+
+  try {
+    // ตรวจสอบคิวกับ Google Calendar อีกครั้ง
+    const result = await api('validate', {
+      request:JSON.stringify({
+        date:originalDate,
+        package:originalPackage,
+        slots:originalSlots
+      })
+    });
+
+    // ป้องกันการเปลี่ยนรายการระหว่างรอตรวจสอบ
+    if (
+      selectedDate !== originalDate ||
+      selectedPackage !== originalPackage ||
+      JSON.stringify([...selectedSlots].sort()) !==
+      JSON.stringify([...originalSlots].sort())
+    ) {
+      throw new Error(
+        'Booking selection changed. Please submit again.'
+      );
+    }
+
+    if (!result.valid) {
+      throw new Error(
+        result.message || 'Selected time is unavailable'
+      );
+    }
+
+    // ต้องเปิดจาก LIFF URL ภายในแอป LINE
+    if (!liffReady) {
+      await liff.init({ liffId:LIFF_ID });
+      liffReady = true;
+    }
+
+    if (!liff.isInClient()) {
+      throw new Error(
+        'กรุณาเปิดผ่าน LIFF URL ภายในห้องแชท LINE OA'
+      );
+    }
+
+    const context = liff.getContext();
+
+    if (
+      !context ||
+      !['utou','room','group'].includes(context.type)
+    ) {
+      throw new Error(
+        'ไม่พบห้องแชทที่รองรับ กรุณาเปิด LIFF จากแชท LINE OA'
+      );
+    }
+
+    status.textContent = 'Sending booking request to LINE...';
+
+    await liff.sendMessages([
+      {
+        type:'text',
+        text:originalMessage
+      }
+    ]);
+
+    bookingSent = true;
+    status.className = 'status success';
+    status.textContent =
+      '✅ ส่งคำขอจองเข้าแชท LINE สำเร็จแล้วค่ะ 💚';
+
+    button.textContent = 'Booking Request Sent ✓';
+    button.disabled = true;
+
+  } catch (error) {
+    console.error(error);
+
+    status.className = 'status error';
+    status.textContent =
+      '❌ ไม่สามารถส่งคำขอจองได้: ' +
+      (error.message || String(error));
+
+    button.disabled = false;
+  }
+}
+
+/* =========================================
+   11. START APPLICATION
+========================================= */
+
+setupLiff();
+loadMonth();
 
 </script>
-
 </body>
 </html>
