@@ -2,782 +2,1128 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Private Car | Booking</title>
-  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Private Car | Booking</title>
+<script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 
-  <style>
-    :root {
-      --green:#35513b;
-      --sage:#dfe8d9;
-      --bg:#f8f8f2;
-      --yellow:#f6e6a7;
-      --red:#e8b8b1;
-      --muted:#718371;
-    }
-    * { box-sizing:border-box; }
-    body {
-      margin:0;
-      background:var(--bg);
-      color:var(--green);
-      font-family:Arial,sans-serif;
-      font-size:14px;
-    }
-    main {
-      max-width:510px;
-      margin:32px auto;
-      padding:0 14px 40px;
-    }
-    header { text-align:center; margin-bottom:24px; }
-    h1 { margin:0 0 8px; font-size:28px; }
-    header small {
-      letter-spacing:2px;
-      color:var(--muted);
-      font-size:11px;
-    }
-    .card {
-      background:white;
-      border-radius:16px;
-      padding:15px;
-      margin:16px 0;
-    }
-    .hidden { display:none!important; }
-    .hint,.loading {
-      color:var(--muted);
-      font-size:12px;
-      line-height:1.6;
-    }
-    h3 { font-size:17px; margin:0 0 14px; }
-    button {
-      font:inherit;
-      cursor:pointer;
-      border:0;
-      border-radius:9px;
-      padding:11px 14px;
-      background:var(--sage);
-      color:var(--green);
-    }
-    button:disabled { opacity:.4; cursor:not-allowed; }
-    .monthbar {
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      margin-bottom:15px;
-    }
-    .monthbar strong { font-size:17px; }
-    .calendar {
-      display:grid;
-      grid-template-columns:repeat(7,minmax(0,1fr));
-      gap:5px;
-    }
-    .weekday {
-      text-align:center;
-      padding:6px 0;
-      font-size:10px;
-      color:var(--muted);
-    }
-    .day {
-      min-height:38px;
-      padding:8px 0;
-      text-align:center;
-    }
-    .available { background:var(--sage); }
-    .partial { background:var(--yellow); }
-    .fullyBooked,.booked { background:var(--red); }
-    .day.selected {
-      background:#638267;
-      color:white;
-      outline:2px solid var(--green);
-    }
-    .day.past { opacity:.3; }
-    .legend {
-      display:flex;
-      justify-content:center;
-      gap:12px;
-      margin-top:16px;
-      font-size:10px;
-    }
-    .dot {
-      display:inline-block;
-      width:10px;
-      height:10px;
-      border-radius:3px;
-      margin-right:4px;
-    }
-    .packages { display:grid; gap:9px; }
-    .choice {
-      display:flex;
-      align-items:center;
-      gap:10px;
-      padding:13px;
-      border:1px solid #dce5d7;
-      border-radius:10px;
-      background:#f2f5ee;
-      cursor:pointer;
-    }
-    .choice:has(input:checked) {
-      background:#d9e7d3;
-      border-color:#58775d;
-      font-weight:bold;
-    }
-    .choice:has(input:disabled) { opacity:.45; }
-    input[type=checkbox] {
-      accent-color:#53745a;
-      width:17px;
-      height:17px;
-    }
-    .slotgrid {
-      display:grid;
-      grid-template-columns:repeat(3,minmax(0,1fr));
-      gap:7px;
-    }
-    .slot {
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      justify-content:center;
-      gap:6px;
-      min-height:75px;
-      padding:12px 4px;
-      border-radius:9px;
-      font-size:11px;
-      cursor:pointer;
-      text-align:center;
-    }
-    .slot:has(input:checked) {
-      background:#b9d3b2;
-      outline:2px solid var(--green);
-    }
-    .slot:has(input:disabled) { opacity:.5; }
-    .summary {
-      white-space:pre-line;
-      background:#edf3e9;
-      padding:15px;
-      border-radius:11px;
-      line-height:1.8;
-      overflow-wrap:anywhere;
-    }
-    .primary {
-      width:100%;
-      margin-top:16px;
-      padding:15px;
-      background:var(--green);
-      color:white;
-      font-size:15px;
-      font-weight:bold;
-    }
-    .status {
-      margin-top:12px;
-      font-size:12px;
-      line-height:1.6;
-      overflow-wrap:anywhere;
-    }
-    .error { color:#a23b31; }
-    .success { color:#287747; }
-  </style>
+<style>
+:root {
+  --green:#385841;
+  --sage:#dfe9dc;
+  --bg:#f6f7f2;
+  --yellow:#f8e8aa;
+  --red:#edc3bf;
+}
+* { box-sizing:border-box; }
+body {
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:var(--bg);
+  color:var(--green);
+  line-height:1.5;
+}
+main { max-width:560px; margin:auto; padding:22px 14px 45px; }
+header { text-align:center; padding:10px 0 22px; }
+h1 { margin:0; font-size:30px; }
+header p { margin:3px 0; font-size:12px; letter-spacing:2px; }
+section {
+  background:#fff;
+  border-radius:17px;
+  padding:18px;
+  margin-bottom:15px;
+}
+h2 { margin:0 0 14px; font-size:19px; }
+label { display:block; margin:13px 0 6px; font-weight:bold; font-size:14px; }
+input,select,textarea {
+  width:100%;
+  padding:12px;
+  border:1px solid #ced9cb;
+  border-radius:9px;
+  font:inherit;
+  color:var(--green);
+  background:white;
+}
+textarea { min-height:75px; resize:vertical; }
+button { font:inherit; cursor:pointer; }
+button:disabled { cursor:not-allowed; opacity:.4; }
+.hidden { display:none!important; }
+.grid { display:grid; grid-template-columns:1fr 1fr; gap:9px; }
+.choice {
+  background:var(--sage);
+  color:var(--green);
+  border:1px solid #cbd8c8;
+  border-radius:11px;
+  padding:13px 8px;
+  min-height:65px;
+  text-align:center;
+  font-size:13px;
+}
+.choice.active { background:var(--green); color:white; }
+.hint { color:#708071; font-size:12px; margin:9px 0; }
+.calhead {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:15px;
+}
+.calhead button {
+  background:var(--sage);
+  border:0;
+  border-radius:8px;
+  padding:8px 14px;
+  color:var(--green);
+}
+.week,.calendar {
+  display:grid;
+  grid-template-columns:repeat(7,minmax(0,1fr));
+  gap:5px;
+  text-align:center;
+}
+.week { font-size:11px; margin-bottom:8px; }
+.day {
+  border:0;
+  min-height:41px;
+  border-radius:8px;
+  background:var(--sage);
+  color:var(--green);
+}
+.day.partial { background:var(--yellow); }
+.day.full { background:var(--red); }
+.day.selected { background:var(--green); color:white; }
+.legend {
+  display:flex;
+  gap:12px;
+  flex-wrap:wrap;
+  margin-top:13px;
+  font-size:11px;
+}
+.dot {
+  display:inline-block;
+  width:10px;
+  height:10px;
+  border-radius:3px;
+  margin-right:4px;
+}
+.slots {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:7px;
+  margin-top:12px;
+}
+.slot {
+  border:0;
+  border-radius:9px;
+  background:var(--sage);
+  color:var(--green);
+  padding:12px 4px;
+  font-size:12px;
+}
+.slot.active { background:var(--green); color:white; }
+.slot.booked { background:var(--red); }
+.summary {
+  padding:15px;
+  border-radius:12px;
+  background:#ebf2e8;
+  white-space:pre-wrap;
+  overflow-wrap:anywhere;
+  font-size:14px;
+}
+.price { font-size:23px; font-weight:bold; margin:14px 0; }
+.primary {
+  width:100%;
+  padding:15px;
+  margin-top:12px;
+  border:0;
+  border-radius:11px;
+  background:var(--green);
+  color:white;
+  font-weight:bold;
+}
+.status { white-space:pre-wrap; font-size:13px; }
+.error { color:#b33731; }
+</style>
 </head>
 
 <body>
 <main>
-  <header>
-    <h1>Private Car</h1>
-    <small>CHECK AVAILABILITY & BOOKING</small>
-  </header>
 
-  <section class="card">
-    <div class="monthbar">
-      <button id="prev" onclick="changeMonth(-1)">❮</button>
-      <strong id="monthTitle"></strong>
-      <button onclick="changeMonth(1)">❯</button>
-    </div>
+<header>
+  <h1>Private Car</h1>
+  <p>CHECK AVAILABILITY & BOOKING</p>
+</header>
 
-    <div id="calendar" class="calendar"></div>
+<section>
+  <h2>1. Select Service</h2>
 
-    <div class="legend">
-      <span><i class="dot" style="background:#dfe8d9"></i>Available</span>
-      <span><i class="dot" style="background:#f6e6a7"></i>Partial</span>
-      <span><i class="dot" style="background:#e8b8b1"></i>Fully Booked</span>
-    </div>
+  <div class="grid" id="serviceButtons">
+    <button class="choice" onclick="chooseService('private',this)">
+      🚗 Private Car
+    </button>
+    <button class="choice" onclick="chooseService('airport',this)">
+      ✈️ Airport Transfer
+    </button>
+    <button class="choice" onclick="chooseService('pet',this)">
+      🐾 Pet Taxi
+    </button>
+  </div>
 
-    <p class="hint">
-      กรุณาเลือกวันที่ต้องการเดินทางก่อน
-      เพื่อดูแพ็กเกจและช่วงเวลาที่ว่าง
-    </p>
-
-    <div id="monthLoading" class="loading"></div>
-  </section>
-
-  <section id="bookingPanel" class="card hidden">
-    <h3>Choose Your Booking</h3>
-    <p id="selectedDate" class="hint"></p>
-    <div id="dayLoading" class="loading"></div>
-
-    <div id="bookingControls" class="hidden">
-      <h3>Packages</h3>
-      <div id="packages" class="packages"></div>
-
-      <p class="hint">
-        เลือกแพ็กเกจได้ 1 แบบ หรือเลือก Slot
-        รายชั่วโมงหลายช่องแทนแพ็กเกจ
-      </p>
-
-      <h3>Hourly Slots</h3>
-      <p class="hint">
-        สามารถเลือกเวลาที่ว่างพร้อมกันได้หลายช่อง
-        ช่องละ 1 ชั่วโมง
-      </p>
-
-      <div id="slots" class="slotgrid"></div>
-
-      <h3 style="margin-top:22px">Booking Summary</h3>
-
-      <div id="summary" class="summary">
-        Please select a package or time slots.
-      </div>
-
-      <button
-        id="sendBtn"
-        class="primary"
-        onclick="submitBooking()"
-        disabled>
-        Send Booking Request to LINE
+  <div id="privateFields" class="hidden">
+    <label>Private Car Package</label>
+    <div class="grid" id="privateButtons">
+      <button class="choice" onclick="choosePackage('full',this)">
+        Full Day<br>3,500 THB
       </button>
-
-      <p id="sendStatus" class="status" aria-live="polite"></p>
+      <button class="choice" onclick="choosePackage('am',this)">
+        Half Day AM<br>07:00–12:00<br>1,900 THB
+      </button>
+      <button class="choice" onclick="choosePackage('pm',this)">
+        Half Day PM<br>13:00–18:00<br>1,900 THB
+      </button>
+      <button class="choice" onclick="choosePackage('single',this)">
+        Single Trip<br>เที่ยวเดียว<br>สอบถามราคา
+      </button>
+      <button class="choice" onclick="choosePackage('round',this)">
+        Round Trip<br>ไป–กลับ<br>สอบถามราคา
+      </button>
     </div>
-  </section>
+  </div>
+
+  <div id="airportFields" class="hidden">
+    <label>Airport</label>
+    <select id="airport" onchange="updateSummary()">
+      <option value="">Select Airport</option>
+      <option value="BKK - Suvarnabhumi">BKK - Suvarnabhumi</option>
+      <option value="DMK - Don Mueang">DMK - Don Mueang</option>
+    </select>
+
+    <label>Transfer Type</label>
+    <select id="airportType" onchange="updateSummary()">
+      <option value="Arrival - รับจากสนามบิน">Arrival - รับจากสนามบิน</option>
+      <option value="Departure - ส่งสนามบิน">Departure - ส่งสนามบิน</option>
+    </select>
+
+    <label>Flight Number</label>
+    <input id="flight" placeholder="เช่น TG123" oninput="updateSummary()">
+
+    <label>Passengers</label>
+    <input id="passengers" type="number" min="1" max="4"
+           placeholder="1–4 ท่าน" oninput="updateSummary()">
+
+    <label>Luggage</label>
+    <input id="luggage" placeholder="เช่น กระเป๋าใหญ่ 2 ใบ"
+           oninput="updateSummary()">
+  </div>
+
+  <div id="petFields" class="hidden">
+    <label>Pet Taxi Package</label>
+    <select id="petPackage" onchange="updateSummary()">
+      <option value="one">เที่ยวเดียว — 300 บาท</option>
+      <option value="return">ไป–กลับ — 500 บาท</option>
+    </select>
+
+    <label>Pet Type</label>
+    <input id="petType" placeholder="เช่น แมว / สุนัข"
+           oninput="updateSummary()">
+
+    <label>Number of Pets</label>
+    <input id="petCount" type="number" min="1" value="1"
+           oninput="updateSummary()">
+  </div>
+</section>
+
+<section>
+  <h2>2. Select Date</h2>
+
+  <div class="calhead">
+    <button onclick="changeMonth(-1)">❮</button>
+    <strong id="monthTitle"></strong>
+    <button onclick="changeMonth(1)">❯</button>
+  </div>
+
+  <div class="week">
+    <span>SUN</span><span>MON</span><span>TUE</span>
+    <span>WED</span><span>THU</span><span>FRI</span><span>SAT</span>
+  </div>
+
+  <div class="calendar" id="calendar"></div>
+
+  <div class="legend">
+    <span><i class="dot" style="background:#dfe9dc"></i>Available</span>
+    <span><i class="dot" style="background:#f8e8aa"></i>Partial</span>
+    <span><i class="dot" style="background:#edc3bf"></i>Fully Booked</span>
+  </div>
+
+  <p id="calendarStatus" class="hint"></p>
+</section>
+
+<section id="timeSection" class="hidden">
+  <h2>3. Select Time</h2>
+  <p id="timeHint" class="hint">
+    กรุณาเลือกวันที่ก่อน
+  </p>
+  <div id="slots" class="slots"></div>
+</section>
+
+<section id="routeSection" class="hidden">
+  <h2>4. Travel Details</h2>
+
+  <label>Pickup Location (Google Maps)</label>
+  <input id="pickup" type="url"
+         placeholder="วางลิงก์ Google Maps จุดรับ"
+         oninput="updateSummary()">
+
+  <label>Drop-off Location (Google Maps)</label>
+  <input id="dropoff" type="url"
+         placeholder="วางลิงก์ Google Maps จุดส่ง"
+         oninput="updateSummary()">
+
+  <p class="hint">
+    วิธีใช้งาน: เปิด Google Maps → เลือกสถานที่ →
+    Share / แชร์ → Copy Link / คัดลอกลิงก์
+  </p>
+
+  <label>Additional Stops / Notes</label>
+  <textarea id="notes"
+            placeholder="จุดแวะเพิ่มเติมหรือรายละเอียดอื่น ๆ"
+            oninput="updateSummary()"></textarea>
+</section>
+
+<section id="summarySection" class="hidden">
+  <h2>Booking Summary</h2>
+
+  <div class="summary" id="summary"></div>
+  <div class="price" id="price"></div>
+
+  <p class="hint">
+    * ราคาที่แสดงเป็นราคาแพ็กเกจเริ่มต้น
+    กรุณารอผู้ให้บริการตรวจสอบเส้นทาง
+    และยืนยันราคาสุทธิอีกครั้ง
+  </p>
+
+  <button id="sendBtn" class="primary"
+          onclick="submitBooking()">
+    Send Booking Request to LINE
+  </button>
+
+  <p id="sendStatus" class="status" aria-live="polite"></p>
+</section>
+
 </main>
 
 <script>
-/* =========================================
-   1. CONFIGURATION
-========================================= */
-
-const GAS_API_URL =
-  'https://script.google.com/macros/s/AKfycbzdpANU6-SOSlRZ7h6PJI_m_h5TSmDhieq_MeywhE-TNW16VGB02VA6HRMX_Hz_QvTNeg/exec';
+/* =========================
+   CONFIGURATION
+========================= */
 
 const LIFF_ID = '2011823100-GSlF8xOA';
+
+const GAS_API_URL =
+'https://script.google.com/macros/s/AKfycbzdpANU6-SOSlRZ7h6PJI_m_h5TSmDhieq_MeywhE-TNW16VGB02VA6HRMX_Hz_QvTNeg/exec';
+
+const PRICES = {
+  private: {
+    full:3500,
+    am:1900,
+    pm:1900,
+    single:null,
+    round:null
+  },
+  airport:600,
+  pet:{
+    one:300,
+    return:500
+  }
+};
+
+/* Full Day ตัวอย่าง 07:00–18:00
+   สามารถปรับเวลาให้ตรงกับบริการจริง */
+const FULL_START = 7;
+const FULL_END = 18;
 
 const $ = id => document.getElementById(id);
 
 let liffReady = false;
-let viewDate = new Date();
-let selectedDate = '';
+let service = '';
 let selectedPackage = '';
-let selectedSlots = new Set();
-let monthStatuses = {};
-let dayData = null;
-let bookingSent = false;
-let apiCounter = 0;
-let monthRequest = 0;
-let dayRequest = 0;
+let selectedDate = '';
+let selectedSlots = [];
+let daySlots = [];
+let monthData = {};
+let dayReady = false;
 
-viewDate.setDate(1);
+const today = new Date();
+let viewYear = today.getFullYear();
+let viewMonth = today.getMonth();
 
-/* =========================================
-   2. GOOGLE APPS SCRIPT API (JSONP)
-========================================= */
-
-function api(action, params = {}) {
-  return new Promise((resolve, reject) => {
-    const callback = 'privateCarCb_' + (++apiCounter);
-    const script = document.createElement('script');
-    const url = new URL(GAS_API_URL);
-
-    url.searchParams.set('action', action);
-    url.searchParams.set('callback', callback);
-
-    Object.entries(params).forEach(([key, value]) => {
-      url.searchParams.set(key, String(value));
-    });
-
-    let finished = false;
-    let timer;
-
-    function cleanup() {
-      clearTimeout(timer);
-      script.remove();
-      delete window[callback];
-    }
-
-    function fail(error) {
-      if (finished) return;
-      finished = true;
-      cleanup();
-      reject(error);
-    }
-
-    window[callback] = function(response) {
-      if (finished) return;
-      finished = true;
-      cleanup();
-
-      if (response && response.ok) {
-        resolve(response.data);
-      } else {
-        reject(new Error(
-          response?.error || 'API error'
-        ));
-      }
-    };
-
-    script.onerror = () => fail(
-      new Error('Unable to reach Google Apps Script API')
-    );
-
-    timer = setTimeout(
-      () => fail(new Error('API timeout')),
-      45000
-    );
-
-    script.src = url.toString();
-    document.head.appendChild(script);
-  });
+function pad(n) {
+  return String(n).padStart(2,'0');
 }
 
-/* =========================================
-   3. LINE LIFF
-========================================= */
+function dateKey(y,m,d) {
+  return y+'-'+pad(m+1)+'-'+pad(d);
+}
 
-async function setupLiff() {
+/* =========================
+   LIFF
+========================= */
+
+async function initLiff() {
   try {
-    if (typeof liff === 'undefined') {
-      throw new Error('LINE LIFF SDK could not be loaded');
+    await liff.init({liffId:LIFF_ID});
+
+    if (!liff.isLoggedIn()) {
+      liff.login({redirectUri:location.href});
+      return;
     }
 
-    await liff.init({ liffId: LIFF_ID });
     liffReady = true;
-
-    console.log('LIFF initialized', {
-      inClient: liff.isInClient(),
-      context: liff.getContext()
-    });
-
-  } catch (error) {
-    liffReady = false;
-    console.error('LIFF initialization failed:', error);
+  } catch(error) {
+    console.error('LIFF:',error);
   }
 }
 
-function checkLiffStatus() {
-  const status = $('sendStatus');
+/* =========================
+   GOOGLE APPS SCRIPT API
 
-  const info = {
-    liffReady: liffReady,
-    isInClient: liffReady ? liff.isInClient() : false,
-    context: liffReady ? liff.getContext() : null,
-    url: window.location.href
-  };
+   Code.gs ต้องรองรับ:
+   action=month
+   action=day
 
-  status.textContent =
-    'LIFF Debug: ' + JSON.stringify(info);
-}
+   หาก Code.gs เดิมใช้ชื่ออื่น
+   ให้ปรับส่วนนี้ให้ตรงกัน
+========================= */
 
-/* =========================================
-   4. DATE HELPERS
-========================================= */
+async function apiGet(params) {
+  const url = new URL(GAS_API_URL);
 
-function pad(number) {
-  return String(number).padStart(2, '0');
-}
-
-function dateKey(year, month, day) {
-  return year + '-' + pad(month) + '-' + pad(day);
-}
-
-function todayKey() {
-  const parts = new Intl.DateTimeFormat('en-CA', {
-    timeZone:'Asia/Bangkok',
-    year:'numeric',
-    month:'2-digit',
-    day:'2-digit'
-  }).formatToParts(new Date());
-
-  const get = type =>
-    parts.find(part => part.type === type).value;
-
-  return `${get('year')}-${get('month')}-${get('day')}`;
-}
-
-/* =========================================
-   5. LOAD MONTH
-========================================= */
-
-async function loadMonth() {
-  const year = viewDate.getFullYear();
-  const month = viewDate.getMonth() + 1;
-  const requestId = ++monthRequest;
-
-  $('monthTitle').textContent =
-    new Intl.DateTimeFormat('en-US', {
-      month:'long',
-      year:'numeric'
-    }).format(viewDate);
-
-  $('monthLoading').textContent = 'Loading calendar...';
-  $('calendar').innerHTML = '';
-
-  try {
-    const result = await api('month', { year, month });
-
-    if (requestId !== monthRequest) return;
-
-    monthStatuses = result;
-    renderCalendar();
-    $('monthLoading').textContent = '';
-
-  } catch (error) {
-    if (requestId !== monthRequest) return;
-
-    $('monthLoading').textContent =
-      'Unable to load calendar: ' + error.message;
-  }
-}
-
-function changeMonth(direction) {
-  viewDate.setMonth(viewDate.getMonth() + direction);
-
-  selectedDate = '';
-  selectedPackage = '';
-  selectedSlots.clear();
-  dayData = null;
-  ++dayRequest;
-
-  $('bookingPanel').classList.add('hidden');
-  loadMonth();
-}
-
-/* =========================================
-   6. RENDER CALENDAR
-========================================= */
-
-function renderCalendar() {
-  const calendar = $('calendar');
-  calendar.innerHTML = '';
-
-  const year = viewDate.getFullYear();
-  const month = viewDate.getMonth() + 1;
-  const firstDay = new Date(year, month - 1, 1).getDay();
-  const daysInMonth = new Date(year, month, 0).getDate();
-  const today = todayKey();
-
-  ['SUN','MON','TUE','WED','THU','FRI','SAT']
-    .forEach(name => {
-      const element = document.createElement('div');
-      element.className = 'weekday';
-      element.textContent = name;
-      calendar.appendChild(element);
-    });
-
-  for (let i = 0; i < firstDay; i++) {
-    calendar.appendChild(document.createElement('div'));
-  }
-
-  for (let day = 1; day <= daysInMonth; day++) {
-    const key = dateKey(year, month, day);
-    const status = monthStatuses[key] || 'available';
-
-    const button = document.createElement('button');
-
-    button.className =
-      'day ' + status +
-      (key === selectedDate ? ' selected' : '') +
-      (key < today ? ' past' : '');
-
-    button.textContent = day;
-    button.disabled = key < today;
-
-    button.onclick = () => selectDate(key);
-
-    calendar.appendChild(button);
-  }
-}
-
-/* =========================================
-   7. SELECT DATE
-========================================= */
-
-async function selectDate(key) {
-  const requestId = ++dayRequest;
-
-  selectedDate = key;
-  selectedPackage = '';
-  selectedSlots.clear();
-  dayData = null;
-  bookingSent = false;
-
-  renderCalendar();
-
-  $('bookingPanel').classList.remove('hidden');
-  $('bookingControls').classList.add('hidden');
-
-  $('selectedDate').textContent =
-    new Intl.DateTimeFormat('en-US', {
-      weekday:'long',
-      day:'numeric',
-      month:'long',
-      year:'numeric'
-    }).format(new Date(key + 'T12:00:00'));
-
-  $('dayLoading').textContent =
-    'Checking available times...';
-
-  $('sendStatus').textContent = '';
-
-  try {
-    const result = await api('day', { date:key });
-
-    if (requestId !== dayRequest) return;
-
-    dayData = result;
-
-    $('dayLoading').textContent = '';
-    $('bookingControls').classList.remove('hidden');
-
-    renderOptions();
-
-  } catch (error) {
-    if (requestId !== dayRequest) return;
-
-    $('dayLoading').textContent =
-      'Unable to check availability: ' + error.message;
-  }
-}
-
-/* =========================================
-   8. PACKAGES AND MULTIPLE SLOTS
-========================================= */
-
-function renderOptions() {
-  const packageContainer = $('packages');
-  packageContainer.innerHTML = '';
-
-  ['full','am','pm'].forEach(key => {
-    const pkg = dayData.packages[key];
-
-    const label = document.createElement('label');
-    label.className = 'choice';
-
-    const checkbox = document.createElement('input');
-    checkbox.type = 'checkbox';
-    checkbox.checked = selectedPackage === key;
-    checkbox.disabled = !pkg.available;
-
-    checkbox.onchange = () => {
-      selectedPackage = checkbox.checked ? key : '';
-
-      if (selectedPackage) {
-        selectedSlots.clear();
-      }
-
-      bookingSent = false;
-      renderOptions();
-    };
-
-    const text = document.createElement('span');
-
-    text.textContent =
-      `${pkg.name} (${pkg.start}–${pkg.end})` +
-      (pkg.available ? '' : ' — Unavailable');
-
-    label.append(checkbox, text);
-    packageContainer.appendChild(label);
+  Object.entries(params).forEach(([key,value]) => {
+    url.searchParams.set(key,String(value));
   });
 
-  const slotContainer = $('slots');
-  slotContainer.innerHTML = '';
-
-  dayData.slots.forEach(slot => {
-    const label = document.createElement('label');
-    label.className = 'slot ' + slot.status;
-
-    const checkbox = document.createElement('input');
-    checkbox.type = 'checkbox';
-    checkbox.checked = selectedSlots.has(slot.time);
-
-    checkbox.disabled =
-      slot.status !== 'available' ||
-      Boolean(selectedPackage);
-
-    checkbox.onchange = () => {
-      if (checkbox.checked) {
-        selectedSlots.add(slot.time);
-      } else {
-        selectedSlots.delete(slot.time);
-      }
-
-      bookingSent = false;
-      updateSummary();
-    };
-
-    const time = document.createElement('span');
-    time.textContent = slot.time;
-
-    const availability = document.createElement('small');
-    availability.textContent =
-      slot.status === 'available' ? 'Available' : 'Booked';
-
-    label.append(checkbox, time, availability);
-    slotContainer.appendChild(label);
+  const response = await fetch(url.toString(),{
+    method:'GET',
+    redirect:'follow'
   });
 
+  if (!response.ok) {
+    throw new Error('API HTTP '+response.status);
+  }
+
+  const data = await response.json();
+
+  if (data.error) {
+    throw new Error(data.error);
+  }
+
+  return data;
+}
+
+async function fetchMonth() {
+  return apiGet({
+    action:'month',
+    year:viewYear,
+    month:viewMonth+1
+  });
+}
+
+async function fetchDay(date) {
+  return apiGet({
+    action:'day',
+    date:date
+  });
+}
+
+/* =========================
+   NORMALIZE API DATA
+========================= */
+
+function normalizeStatus(value) {
+  const s = String(value || '').toLowerCase();
+
+  if (['full','booked','fullybooked','fully_booked'].includes(s)) {
+    return 'full';
+  }
+
+  if (s === 'partial') return 'partial';
+
+  return 'available';
+}
+
+function normalizeMonth(data) {
+  const raw = data.days || data.data || data;
+  const result = {};
+
+  if (Array.isArray(raw)) {
+    raw.forEach(item => {
+      const day = Number(
+        String(item.date || item.day || '').slice(-2)
+      );
+
+      if (day >= 1 && day <= 31) {
+        result[day] = normalizeStatus(
+          item.status || item.availability
+        );
+      }
+    });
+  } else if (raw && typeof raw === 'object') {
+    Object.entries(raw).forEach(([key,value]) => {
+      const day = Number(String(key).slice(-2));
+
+      if (day >= 1 && day <= 31) {
+        result[day] = normalizeStatus(
+          typeof value === 'object'
+            ? value.status || value.availability
+            : value
+        );
+      }
+    });
+  }
+
+  return result;
+}
+
+function normalizeDay(data) {
+  const raw = data.slots || data.data || data;
+
+  if (!Array.isArray(raw)) {
+    throw new Error('รูปแบบข้อมูลช่วงเวลาไม่ตรงกับ API');
+  }
+
+  return raw.map(item => {
+    if (typeof item === 'string') {
+      return {time:item,available:true};
+    }
+
+    const time =
+      item.time ||
+      item.slot ||
+      item.label ||
+      (
+        item.start && item.end
+          ? item.start+'–'+item.end
+          : ''
+      );
+
+    const status = String(item.status || '').toLowerCase();
+
+    return {
+      time:time,
+      available:
+        item.available !== false &&
+        item.booked !== true &&
+        !['booked','unavailable','full'].includes(status)
+    };
+  }).filter(item => item.time);
+}
+
+/* =========================
+   SERVICE / PACKAGE
+========================= */
+
+function chooseService(value,button) {
+  service = value;
+  selectedPackage = '';
+  selectedSlots = [];
+
+  document.querySelectorAll('#serviceButtons .choice')
+    .forEach(el => el.classList.remove('active'));
+
+  button.classList.add('active');
+
+  $('privateFields').classList.toggle(
+    'hidden',service !== 'private'
+  );
+
+  $('airportFields').classList.toggle(
+    'hidden',service !== 'airport'
+  );
+
+  $('petFields').classList.toggle(
+    'hidden',service !== 'pet'
+  );
+
+  document.querySelectorAll('#privateButtons .choice')
+    .forEach(el => el.classList.remove('active'));
+
+  $('routeSection').classList.remove('hidden');
+  $('summarySection').classList.remove('hidden');
+
+  renderTime();
   updateSummary();
 }
 
-/* =========================================
-   9. BOOKING SUMMARY
-========================================= */
+function choosePackage(value,button) {
+  selectedPackage = value;
+  selectedSlots = [];
 
-function messageText() {
-  let message =
-    '🚗 PRIVATE CAR — Booking Request\n' +
-    `📅 Date: ${selectedDate}\n`;
+  document.querySelectorAll('#privateButtons .choice')
+    .forEach(el => el.classList.remove('active'));
 
-  if (selectedPackage) {
-    const pkg = dayData.packages[selectedPackage];
+  button.classList.add('active');
 
-    message +=
-      `📦 Package: ${pkg.name}\n` +
-      `🕒 Time: ${pkg.start}–${pkg.end}`;
+  renderTime();
+  updateSummary();
+}
 
-  } else if (selectedSlots.size > 0) {
-    const slots = [...selectedSlots].sort();
+/* =========================
+   CALENDAR
+========================= */
 
-    message +=
-      '📦 Hourly Booking\n' +
-      '🕒 Selected Slots:\n' +
-      slots.join('\n') +
-      `\nTotal: ${slots.length} hour(s)`;
+function changeMonth(offset) {
+  const next = new Date(
+    viewYear,viewMonth+offset,1
+  );
 
-  } else {
-    return '';
+  const current = new Date(
+    today.getFullYear(),today.getMonth(),1
+  );
+
+  if (next < current) return;
+
+  viewYear = next.getFullYear();
+  viewMonth = next.getMonth();
+
+  loadMonth();
+}
+
+async function loadMonth() {
+  $('calendar').innerHTML = '';
+  $('calendarStatus').textContent = 'Loading calendar...';
+
+  $('monthTitle').textContent = new Date(
+    viewYear,viewMonth,1
+  ).toLocaleDateString('en-US',{
+    month:'long',
+    year:'numeric'
+  });
+
+  try {
+    const data = await fetchMonth();
+    monthData = normalizeMonth(data);
+
+    $('calendarStatus').textContent = '';
+    renderCalendar();
+  } catch(error) {
+    console.error(error);
+    $('calendarStatus').textContent =
+      'ไม่สามารถโหลดข้อมูลปฏิทินได้ กรุณาตรวจสอบ Google Apps Script API';
+    $('calendarStatus').className = 'hint error';
+  }
+}
+
+function renderCalendar() {
+  const container = $('calendar');
+  container.innerHTML = '';
+
+  const first = new Date(
+    viewYear,viewMonth,1
+  ).getDay();
+
+  const count = new Date(
+    viewYear,viewMonth+1,0
+  ).getDate();
+
+  for (let i=0;i<first;i++) {
+    container.appendChild(document.createElement('span'));
   }
 
-  message +=
-    '\n\nPlease check availability and confirm the price. 💚';
+  const todayString = dateKey(
+    today.getFullYear(),
+    today.getMonth(),
+    today.getDate()
+  );
 
-  return message;
+  for (let day=1;day<=count;day++) {
+    const date = dateKey(viewYear,viewMonth,day);
+    const status = monthData[day] || 'available';
+
+    const button = document.createElement('button');
+    button.className = 'day '+status;
+    button.textContent = day;
+
+    if (date === selectedDate) {
+      button.classList.add('selected');
+    }
+
+    if (date < todayString || status === 'full') {
+      button.disabled = true;
+    }
+
+    button.onclick = () => selectDate(date);
+    container.appendChild(button);
+  }
+}
+
+async function selectDate(date) {
+  selectedDate = date;
+  selectedSlots = [];
+  daySlots = [];
+  dayReady = false;
+
+  renderCalendar();
+
+  $('timeSection').classList.remove('hidden');
+  $('timeHint').textContent = 'Loading available times...';
+  $('slots').innerHTML = '';
+
+  try {
+    const data = await fetchDay(date);
+
+    daySlots = normalizeDay(data);
+    dayReady = true;
+
+    renderTime();
+    updateSummary();
+  } catch(error) {
+    console.error(error);
+    $('timeHint').textContent =
+      'ไม่สามารถโหลดช่วงเวลาว่างได้ กรุณาตรวจสอบ API';
+    $('timeHint').className = 'hint error';
+  }
+}
+
+/* =========================
+   TIME SELECTION
+========================= */
+
+function canonical(time) {
+  return String(time)
+    .replace(/-/g,'–')
+    .replace(/\s/g,'');
+}
+
+function packageHours(type) {
+  let start,end;
+
+  if (type === 'full') {
+    start = FULL_START;
+    end = FULL_END;
+  } else if (type === 'am') {
+    start = 7;
+    end = 12;
+  } else if (type === 'pm') {
+    start = 13;
+    end = 18;
+  } else {
+    return [];
+  }
+
+  const result = [];
+
+  for (let h=start;h<end;h++) {
+    result.push(
+      pad(h)+':00–'+pad(h+1)+':00'
+    );
+  }
+
+  return result;
+}
+
+function packageAvailable(type) {
+  const available = new Set(
+    daySlots.filter(s => s.available)
+      .map(s => canonical(s.time))
+  );
+
+  return packageHours(type).every(
+    time => available.has(canonical(time))
+  );
+}
+
+function needsTimeSlots() {
+  return (
+    service === 'airport' ||
+    service === 'pet' ||
+    (
+      service === 'private' &&
+      ['single','round'].includes(selectedPackage)
+    )
+  );
+}
+
+function renderTime() {
+  if (!selectedDate || !service) {
+    $('timeSection').classList.add('hidden');
+    return;
+  }
+
+  $('timeSection').classList.remove('hidden');
+
+  const container = $('slots');
+  container.innerHTML = '';
+
+  if (!dayReady) {
+    $('timeHint').textContent = 'Loading available times...';
+    return;
+  }
+
+  if (
+    service === 'private' &&
+    ['full','am','pm'].includes(selectedPackage)
+  ) {
+    $('timeHint').textContent = packageAvailable(selectedPackage)
+      ? 'แพ็กเกจนี้สามารถส่งคำขอจองได้'
+      : 'แพ็กเกจนี้มีช่วงเวลาที่ไม่ว่าง กรุณาเลือกแพ็กเกจอื่น';
+
+    return;
+  }
+
+  if (!needsTimeSlots()) {
+    $('timeHint').textContent =
+      'กรุณาเลือกแพ็กเกจก่อน';
+    return;
+  }
+
+  $('timeHint').textContent =
+    'เลือกช่วงเวลาที่ต้องการ (เลือกได้หลายช่วง)';
+
+  daySlots.forEach(slot => {
+    const button = document.createElement('button');
+
+    button.className = 'slot';
+    button.textContent =
+      slot.time+(slot.available?'':' Booked');
+
+    button.disabled = !slot.available;
+
+    if (!slot.available) {
+      button.classList.add('booked');
+    }
+
+    if (selectedSlots.includes(slot.time)) {
+      button.classList.add('active');
+    }
+
+    button.onclick = () => {
+      if (selectedSlots.includes(slot.time)) {
+        selectedSlots = selectedSlots.filter(
+          value => value !== slot.time
+        );
+      } else {
+        selectedSlots.push(slot.time);
+      }
+
+      selectedSlots.sort();
+      renderTime();
+      updateSummary();
+    };
+
+    container.appendChild(button);
+  });
+}
+
+/* =========================
+   PRICE
+========================= */
+
+function getPrice() {
+  if (service === 'private') {
+    return PRICES.private[selectedPackage] ?? null;
+  }
+
+  if (service === 'airport') {
+    return PRICES.airport;
+  }
+
+  if (service === 'pet') {
+    return PRICES.pet[$('petPackage').value];
+  }
+
+  return null;
+}
+
+function priceLabel() {
+  if (!service) return 'กรุณาเลือกบริการ';
+
+  if (service === 'private' && !selectedPackage) {
+    return 'กรุณาเลือกแพ็กเกจ';
+  }
+
+  const price = getPrice();
+
+  if (price === null || price === undefined) {
+    return 'สอบถามราคา';
+  }
+
+  return 'เริ่มต้น '+price.toLocaleString('en-US')+' บาท';
+}
+
+/* =========================
+   BOOKING MESSAGE
+========================= */
+
+function serviceName() {
+  return {
+    private:'Private Car',
+    airport:'Airport Transfer',
+    pet:'Pet Taxi'
+  }[service] || '-';
+}
+
+function packageName() {
+  return {
+    full:'Full Day',
+    am:'Half Day AM (07:00–12:00)',
+    pm:'Half Day PM (13:00–18:00)',
+    single:'Single Trip (เที่ยวเดียว)',
+    round:'Round Trip (ไป–กลับ)'
+  }[selectedPackage] || '-';
+}
+
+function bookingMessage() {
+  const lines = [
+    '🚗 PRIVATE CAR — Booking Request',
+    '',
+    '🚘 Service: '+serviceName(),
+    '📅 Date: '+(selectedDate || '-')
+  ];
+
+  if (service === 'private') {
+    lines.push('📦 Package: '+packageName());
+
+    if (selectedPackage === 'full') {
+      lines.push(
+        '🕒 Time: '+pad(FULL_START)+':00–'+
+        pad(FULL_END)+':00'
+      );
+    }
+
+    if (selectedPackage === 'am') {
+      lines.push('🕒 Time: 07:00–12:00');
+    }
+
+    if (selectedPackage === 'pm') {
+      lines.push('🕒 Time: 13:00–18:00');
+    }
+  }
+
+  if (needsTimeSlots()) {
+    lines.push(
+      '🕒 Selected Time:\n'+
+      (selectedSlots.join('\n') || '-')
+    );
+  }
+
+  if (service === 'airport') {
+    lines.push(
+      '✈️ Airport: '+($('airport').value || '-'),
+      'Transfer: '+$('airportType').value,
+      'Flight: '+($('flight').value || '-'),
+      'Passengers: '+($('passengers').value || '-'),
+      'Luggage: '+($('luggage').value || '-')
+    );
+  }
+
+  if (service === 'pet') {
+    lines.push(
+      '🐾 Package: '+(
+        $('petPackage').value === 'return'
+          ? 'Round Trip (ไป–กลับ)'
+          : 'Single Trip (เที่ยวเดียว)'
+      ),
+      'Pet Type: '+($('petType').value || '-'),
+      'Number of Pets: '+($('petCount').value || '-')
+    );
+  }
+
+  lines.push(
+    '',
+    '📍 Pickup Location:',
+    $('pickup').value || '-',
+    '',
+    '🏁 Drop-off Location:',
+    $('dropoff').value || '-',
+    '',
+    '📝 Additional Notes:',
+    $('notes').value || '-',
+    '',
+    '💰 Price: '+priceLabel(),
+    '',
+    'กรุณาตรวจสอบคิวและยืนยันราคาสุทธิอีกครั้ง 💚'
+  );
+
+  return lines.join('\n');
 }
 
 function updateSummary() {
-  const message = messageText();
+  if (!service) return;
 
-  $('summary').textContent =
-    message || 'Please select a package or time slots.';
+  $('summary').textContent = bookingMessage();
+  $('price').textContent = priceLabel();
+}
 
-  $('sendBtn').disabled = !message || bookingSent;
+/* =========================
+   VALIDATION
+========================= */
 
-  if (!bookingSent) {
-    $('sendBtn').textContent =
-      'Send Booking Request to LINE';
+function validMapsLink(value) {
+  try {
+    const url = new URL(value.trim());
+    const host = url.hostname.toLowerCase();
+
+    return url.protocol === 'https:' && (
+      host === 'maps.app.goo.gl' ||
+      host === 'goo.gl' ||
+      host === 'google.com' ||
+      host.endsWith('.google.com') ||
+      host === 'google.co.th' ||
+      host.endsWith('.google.co.th')
+    );
+  } catch(error) {
+    return false;
   }
 }
 
-/* =========================================
-   10. SEND BOOKING REQUEST TO LINE
-========================================= */
+function validateBooking() {
+  if (!service) {
+    return 'กรุณาเลือกประเภทบริการ';
+  }
+
+  if (!selectedDate || !dayReady) {
+    return 'กรุณาเลือกวันที่และรอโหลดช่วงเวลาว่าง';
+  }
+
+  if (service === 'private') {
+    if (!selectedPackage) {
+      return 'กรุณาเลือกแพ็กเกจ Private Car';
+    }
+
+    if (
+      ['full','am','pm'].includes(selectedPackage) &&
+      !packageAvailable(selectedPackage)
+    ) {
+      return 'แพ็กเกจนี้มีช่วงเวลาที่ไม่ว่างแล้ว';
+    }
+  }
+
+  if (needsTimeSlots()) {
+    if (selectedSlots.length === 0) {
+      return 'กรุณาเลือกช่วงเวลาเดินทาง';
+    }
+
+    const available = new Set(
+      daySlots.filter(s => s.available).map(s => s.time)
+    );
+
+    if (selectedSlots.some(s => !available.has(s))) {
+      return 'มีช่วงเวลาที่เลือกไม่ว่างแล้ว';
+    }
+  }
+
+  if (service === 'airport') {
+    if (!$('airport').value) {
+      return 'กรุณาเลือกสนามบิน';
+    }
+
+    const passengers = Number($('passengers').value);
+
+    if (
+      !Number.isInteger(passengers) ||
+      passengers < 1 ||
+      passengers > 4
+    ) {
+      return 'กรุณาระบุจำนวนผู้โดยสาร 1–4 ท่าน';
+    }
+  }
+
+  if (service === 'pet') {
+    const count = Number($('petCount').value);
+
+    if (!Number.isInteger(count) || count < 1) {
+      return 'กรุณาระบุจำนวนสัตว์เลี้ยงให้ถูกต้อง';
+    }
+
+    if (!$('petType').value.trim()) {
+      return 'กรุณาระบุประเภทสัตว์เลี้ยง';
+    }
+  }
+
+  if (!validMapsLink($('pickup').value)) {
+    return 'กรุณาวางลิงก์ Google Maps จุดรับ';
+  }
+
+  if (!validMapsLink($('dropoff').value)) {
+    return 'กรุณาวางลิงก์ Google Maps จุดส่ง';
+  }
+
+  return '';
+}
+
+/* =========================
+   SEND TO LINE
+========================= */
 
 async function submitBooking() {
-  const button = $('sendBtn');
   const status = $('sendStatus');
+  const button = $('sendBtn');
 
-  const originalDate = selectedDate;
-  const originalPackage = selectedPackage;
-  const originalSlots = [...selectedSlots];
-  const originalMessage = messageText();
+  status.textContent = '';
+  status.className = 'status';
 
-  if (!originalMessage) return;
+  let error = validateBooking();
+
+  if (error) {
+    status.textContent = '❌ '+error;
+    status.className = 'status error';
+    return;
+  }
+
+  if (!liffReady || !liff.isInClient()) {
+    status.textContent =
+      'กรุณาเปิดหน้าจองผ่าน LIFF URL ภายใน LINE';
+    status.className = 'status error';
+    return;
+  }
 
   button.disabled = true;
-  status.className = 'status';
-  status.textContent = 'Checking availability...';
+  status.textContent = 'กำลังตรวจสอบคิว...';
 
   try {
-    // ตรวจสอบคิวกับ Google Calendar อีกครั้ง
-    const result = await api('validate', {
-      request:JSON.stringify({
-        date:originalDate,
-        package:originalPackage,
-        slots:originalSlots
-      })
-    });
+    // ตรวจสอบช่วงเวลาล่าสุดอีกครั้งก่อนส่ง
+    const latest = await fetchDay(selectedDate);
+    daySlots = normalizeDay(latest);
 
-    // ป้องกันการเปลี่ยนรายการระหว่างรอตรวจสอบ
-    if (
-      selectedDate !== originalDate ||
-      selectedPackage !== originalPackage ||
-      JSON.stringify([...selectedSlots].sort()) !==
-      JSON.stringify([...originalSlots].sort())
-    ) {
-      throw new Error(
-        'Booking selection changed. Please submit again.'
-      );
+    error = validateBooking();
+
+    if (error) {
+      renderTime();
+      throw new Error(error);
     }
 
-    if (!result.valid) {
-      throw new Error(
-        result.message || 'Selected time is unavailable'
-      );
-    }
-
-    // ต้องเปิดจาก LIFF URL ภายในแอป LINE
-    if (!liffReady) {
-      await liff.init({ liffId:LIFF_ID });
-      liffReady = true;
-    }
-
-    if (!liff.isInClient()) {
-      throw new Error(
-        'กรุณาเปิดผ่าน LIFF URL ภายในห้องแชท LINE OA'
-      );
-    }
-
-    const context = liff.getContext();
-
-    if (
-      !context ||
-      !['utou','room','group'].includes(context.type)
-    ) {
-      throw new Error(
-        'ไม่พบห้องแชทที่รองรับ กรุณาเปิด LIFF จากแชท LINE OA'
-      );
-    }
-
-    status.textContent = 'Sending booking request to LINE...';
+    status.textContent = 'กำลังส่งคำขอจอง...';
 
     await liff.sendMessages([
       {
         type:'text',
-        text:originalMessage
+        text:bookingMessage()
       }
     ]);
 
-    bookingSent = true;
-    status.className = 'status success';
     status.textContent =
-      '✅ ส่งคำขอจองเข้าแชท LINE สำเร็จแล้วค่ะ 💚';
+      '✅ ส่งคำขอจองเข้า LINE สำเร็จแล้วค่ะ';
 
-    button.textContent = 'Booking Request Sent ✓';
-    button.disabled = true;
+    // ยังไม่ถือว่าเป็นการยืนยันจอง
+    // รอผู้ให้บริการตรวจสอบและยืนยันอีกครั้ง
 
-  } catch (error) {
+  } catch(error) {
     console.error(error);
 
-    status.className = 'status error';
     status.textContent =
-      '❌ ไม่สามารถส่งคำขอจองได้: ' +
-      (error.message || String(error));
+      '❌ '+error.message;
 
+    status.className = 'status error';
+
+  } finally {
     button.disabled = false;
   }
 }
 
-/* =========================================
-   11. START APPLICATION
-========================================= */
+/* =========================
+   START
+========================= */
 
-setupLiff();
+initLiff();
 loadMonth();
 
 </script>
