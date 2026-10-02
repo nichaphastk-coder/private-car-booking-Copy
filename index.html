@@ -486,12 +486,15 @@ button:disabled {
          placeholder="วางลิงก์ Google Maps จุดรับ"
          oninput="updateSummary()">
 
+  
+<div id="dropoffField">
   <label>Drop-off Location (Google Maps)</label>
 
   <input id="dropoff"
          type="url"
          placeholder="วางลิงก์ Google Maps จุดส่ง"
          oninput="updateSummary()">
+</div>
 
   <p class="hint">
     เปิด Google Maps → เลือกสถานที่ →
@@ -1012,6 +1015,15 @@ function chooseService(value,button) {
   selectedPackage = '';
   selectedSlots = [];
 
+$('dropoffField').classList.toggle(
+  'hidden',
+  service === 'private'
+);
+
+if (service === 'private') {
+  $('dropoff').value = '';
+}
+
   document.querySelectorAll(
     '#serviceButtons .choice'
   ).forEach(el => {
@@ -1314,6 +1326,19 @@ function packageName() {
   }[selectedPackage] || '-';
 }
 
+const SERVICE_TERMS = [
+  '📌 เงื่อนไขการให้บริการ',
+  '',
+  '• เกินเวลาที่ตกลง 200 บาท/ชม. เศษของชั่วโมงคิดเป็น 1 ชม.',
+  '• ช่วงเวลา 22:00–06:00 น. +200 บาท',
+  '• ยกเลิก/เปลี่ยนแปลง กรุณาแจ้งล่วงหน้าอย่างน้อย 24 ชม.',
+  '• ยกเลิกภายใน 24 ชม. คิดค่าเสียเวลา 50% ของราคาเที่ยวนั้น',
+  '• ราคายังไม่รวมค่าทางด่วน ค่าจอดรถ และค่าใช้จ่ายระหว่างทาง',
+  '• รวมค่าชาร์จไฟแล้ว',
+  '• ความเสียหายที่เกิดจากผู้โดยสาร คิดตามจริง'
+].join('\n');
+
+
 function bookingMessage() {
   const lines = [
     '🚗 PRIVATE CAR — Booking Request',
@@ -1374,23 +1399,36 @@ function bookingMessage() {
     );
   }
 
+  
   lines.push(
     '',
     '📍 Pickup Location:',
-    $('pickup').value || '-',
-    '',
-    '🏁 Drop-off Location:',
-    $('dropoff').value || '-',
+    $('pickup').value || '-'
+  );
+
+  // แสดงจุดส่งเฉพาะ Airport Transfer และ Pet Taxi
+  if (service !== 'private') {
+    lines.push(
+      '',
+      '🏁 Drop-off Location:',
+      $('dropoff').value || '-'
+    );
+  }
+
+  lines.push(
     '',
     '📝 Additional Notes:',
     $('notes').value || '-',
     '',
-    '💰 Price: '+priceLabel(),
+    '💰 Price: ' + priceLabel(),
+    '',
+    SERVICE_TERMS,
     '',
     'กรุณาตรวจสอบคิวและยืนยันราคาสุทธิอีกครั้ง 💚'
   );
 
   return lines.join('\n');
+
 }
 
 function updateSummary() {
@@ -1506,9 +1544,14 @@ function validateBooking() {
     return 'กรุณาวางลิงก์ Google Maps จุดรับ';
   }
 
-  if (!validMapsLink($('dropoff').value)) {
-    return 'กรุณาวางลิงก์ Google Maps จุดส่ง';
-  }
+ 
+if (
+  service !== 'private' &&
+  !validMapsLink($('dropoff').value)
+) {
+  return 'กรุณาวางลิงก์ Google Maps จุดส่ง';
+}
+
 
   return '';
 }
