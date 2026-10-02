@@ -659,28 +659,67 @@ async function initLiff() {
 ========================= */
 
 async function apiGet(params) {
-  const url = new URL(GAS_API_URL);
+function apiGet(params) {
+  return new Promise((resolve, reject) => {
 
-  Object.entries(params).forEach(([key,value]) => {
-    url.searchParams.set(key,String(value));
+    const callbackName =
+      'privateCarCallback_' +
+      Date.now() + '_' +
+      Math.random().toString(36).slice(2);
+
+    const script = document.createElement('script');
+
+    const url = new URL(GAS_API_URL);
+
+    Object.entries(params).forEach(([key, value]) => {
+      url.searchParams.set(key, String(value));
+    });
+
+    url.searchParams.set('callback', callbackName);
+
+    let finished = false;
+
+    const timeout = setTimeout(() => {
+      finish(new Error('API timeout'));
+    }, 15000);
+
+    function finish(error, result) {
+      if (finished) return;
+      finished = true;
+
+      clearTimeout(timeout);
+      script.remove();
+      delete window[callbackName];
+
+      if (error) {
+        reject(error);
+      } else {
+        resolve(result);
+      }
+    }
+
+    window[callbackName] = function(response) {
+
+      if (!response || response.ok !== true) {
+        finish(new Error(
+          response?.error || 'ไม่สามารถโหลดข้อมูลได้'
+        ));
+        return;
+      }
+
+      finish(null, response.data);
+    };
+
+    script.onerror = function() {
+      finish(new Error('ไม่สามารถเชื่อมต่อ Apps Script API'));
+    };
+
+    script.src = url.toString();
+
+    document.head.appendChild(script);
   });
+}
 
-  const response = await fetch(url.toString(),{
-    method:'GET',
-    redirect:'follow'
-  });
-
-  if (!response.ok) {
-    throw new Error('API HTTP '+response.status);
-  }
-
-  const data = await response.json();
-
-  if (data.error) {
-    throw new Error(data.error);
-  }
-
-  return data;
 }
 
 async function fetchMonth() {
