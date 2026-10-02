@@ -4,7 +4,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
 <title>Private Car | Booking</title>
+
 <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 
 <style>
@@ -15,7 +17,11 @@
   --yellow:#f8e8aa;
   --red:#edc3bf;
 }
-* { box-sizing:border-box; }
+
+* {
+  box-sizing:border-box;
+}
+
 body {
   margin:0;
   font-family:Arial,sans-serif;
@@ -23,18 +29,48 @@ body {
   color:var(--green);
   line-height:1.5;
 }
-main { max-width:560px; margin:auto; padding:22px 14px 45px; }
-header { text-align:center; padding:10px 0 22px; }
-h1 { margin:0; font-size:30px; }
-header p { margin:3px 0; font-size:12px; letter-spacing:2px; }
+
+main {
+  max-width:560px;
+  margin:auto;
+  padding:22px 14px 45px;
+}
+
+header {
+  text-align:center;
+  padding:10px 0 22px;
+}
+
+h1 {
+  margin:0;
+  font-size:30px;
+}
+
+header p {
+  margin:3px 0;
+  font-size:12px;
+  letter-spacing:2px;
+}
+
 section {
   background:#fff;
   border-radius:17px;
   padding:18px;
   margin-bottom:15px;
 }
-h2 { margin:0 0 14px; font-size:19px; }
-label { display:block; margin:13px 0 6px; font-weight:bold; font-size:14px; }
+
+h2 {
+  margin:0 0 14px;
+  font-size:19px;
+}
+
+label {
+  display:block;
+  margin:13px 0 6px;
+  font-weight:bold;
+  font-size:14px;
+}
+
 input,select,textarea {
   width:100%;
   padding:12px;
@@ -44,11 +80,32 @@ input,select,textarea {
   color:var(--green);
   background:white;
 }
-textarea { min-height:75px; resize:vertical; }
-button { font:inherit; cursor:pointer; }
-button:disabled { cursor:not-allowed; opacity:.4; }
-.hidden { display:none!important; }
-.grid { display:grid; grid-template-columns:1fr 1fr; gap:9px; }
+
+textarea {
+  min-height:75px;
+  resize:vertical;
+}
+
+button {
+  font:inherit;
+  cursor:pointer;
+}
+
+button:disabled {
+  cursor:not-allowed;
+  opacity:.4;
+}
+
+.hidden {
+  display:none!important;
+}
+
+.grid {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:9px;
+}
+
 .choice {
   background:var(--sage);
   color:var(--green);
@@ -59,14 +116,25 @@ button:disabled { cursor:not-allowed; opacity:.4; }
   text-align:center;
   font-size:13px;
 }
-.choice.active { background:var(--green); color:white; }
-.hint { color:#708071; font-size:12px; margin:9px 0; }
+
+.choice.active {
+  background:var(--green);
+  color:white;
+}
+
+.hint {
+  color:#708071;
+  font-size:12px;
+  margin:9px 0;
+}
+
 .calhead {
   display:flex;
   align-items:center;
   justify-content:space-between;
   margin-bottom:15px;
 }
+
 .calhead button {
   background:var(--sage);
   border:0;
@@ -74,13 +142,19 @@ button:disabled { cursor:not-allowed; opacity:.4; }
   padding:8px 14px;
   color:var(--green);
 }
+
 .week,.calendar {
   display:grid;
   grid-template-columns:repeat(7,minmax(0,1fr));
   gap:5px;
   text-align:center;
 }
-.week { font-size:11px; margin-bottom:8px; }
+
+.week {
+  font-size:11px;
+  margin-bottom:8px;
+}
+
 .day {
   border:0;
   min-height:41px;
@@ -88,9 +162,20 @@ button:disabled { cursor:not-allowed; opacity:.4; }
   background:var(--sage);
   color:var(--green);
 }
-.day.partial { background:var(--yellow); }
-.day.full { background:var(--red); }
-.day.selected { background:var(--green); color:white; }
+
+.day.partial {
+  background:var(--yellow);
+}
+
+.day.full {
+  background:var(--red);
+}
+
+.day.selected {
+  background:var(--green);
+  color:white;
+}
+
 .legend {
   display:flex;
   gap:12px;
@@ -98,6 +183,7 @@ button:disabled { cursor:not-allowed; opacity:.4; }
   margin-top:13px;
   font-size:11px;
 }
+
 .dot {
   display:inline-block;
   width:10px;
@@ -105,12 +191,14 @@ button:disabled { cursor:not-allowed; opacity:.4; }
   border-radius:3px;
   margin-right:4px;
 }
+
 .slots {
   display:grid;
   grid-template-columns:repeat(3,1fr);
   gap:7px;
   margin-top:12px;
 }
+
 .slot {
   border:0;
   border-radius:9px;
@@ -119,8 +207,16 @@ button:disabled { cursor:not-allowed; opacity:.4; }
   padding:12px 4px;
   font-size:12px;
 }
-.slot.active { background:var(--green); color:white; }
-.slot.booked { background:var(--red); }
+
+.slot.active {
+  background:var(--green);
+  color:white;
+}
+
+.slot.booked {
+  background:var(--red);
+}
+
 .summary {
   padding:15px;
   border-radius:12px;
@@ -129,7 +225,13 @@ button:disabled { cursor:not-allowed; opacity:.4; }
   overflow-wrap:anywhere;
   font-size:14px;
 }
-.price { font-size:23px; font-weight:bold; margin:14px 0; }
+
+.price {
+  font-size:23px;
+  font-weight:bold;
+  margin:14px 0;
+}
+
 .primary {
   width:100%;
   padding:15px;
@@ -140,8 +242,15 @@ button:disabled { cursor:not-allowed; opacity:.4; }
   color:white;
   font-weight:bold;
 }
-.status { white-space:pre-wrap; font-size:13px; }
-.error { color:#b33731; }
+
+.status {
+  white-space:pre-wrap;
+  font-size:13px;
+}
+
+.error {
+  color:#b33731;
+}
 </style>
 </head>
 
@@ -153,87 +262,12 @@ button:disabled { cursor:not-allowed; opacity:.4; }
   <p>CHECK AVAILABILITY & BOOKING</p>
 </header>
 
-<section>
-  <h2>1. Select Service</h2>
-
-  <div class="grid" id="serviceButtons">
-    <button class="choice" onclick="chooseService('private',this)">
-      🚗 Private Car
-    </button>
-    <button class="choice" onclick="chooseService('airport',this)">
-      ✈️ Airport Transfer
-    </button>
-    <button class="choice" onclick="chooseService('pet',this)">
-      🐾 Pet Taxi
-    </button>
-  </div>
-
-  <div id="privateFields" class="hidden">
-    <label>Private Car Package</label>
-    <div class="grid" id="privateButtons">
-      <button class="choice" onclick="choosePackage('full',this)">
-        Full Day<br>3,500 THB
-      </button>
-      <button class="choice" onclick="choosePackage('am',this)">
-        Half Day AM<br>07:00–12:00<br>1,900 THB
-      </button>
-      <button class="choice" onclick="choosePackage('pm',this)">
-        Half Day PM<br>13:00–18:00<br>1,900 THB
-      </button>
-      <button class="choice" onclick="choosePackage('single',this)">
-        Single Trip<br>เที่ยวเดียว<br>สอบถามราคา
-      </button>
-      <button class="choice" onclick="choosePackage('round',this)">
-        Round Trip<br>ไป–กลับ<br>สอบถามราคา
-      </button>
-    </div>
-  </div>
-
-  <div id="airportFields" class="hidden">
-    <label>Airport</label>
-    <select id="airport" onchange="updateSummary()">
-      <option value="">Select Airport</option>
-      <option value="BKK - Suvarnabhumi">BKK - Suvarnabhumi</option>
-      <option value="DMK - Don Mueang">DMK - Don Mueang</option>
-    </select>
-
-    <label>Transfer Type</label>
-    <select id="airportType" onchange="updateSummary()">
-      <option value="Arrival - รับจากสนามบิน">Arrival - รับจากสนามบิน</option>
-      <option value="Departure - ส่งสนามบิน">Departure - ส่งสนามบิน</option>
-    </select>
-
-    <label>Flight Number</label>
-    <input id="flight" placeholder="เช่น TG123" oninput="updateSummary()">
-
-    <label>Passengers</label>
-    <input id="passengers" type="number" min="1" max="4"
-           placeholder="1–4 ท่าน" oninput="updateSummary()">
-
-    <label>Luggage</label>
-    <input id="luggage" placeholder="เช่น กระเป๋าใหญ่ 2 ใบ"
-           oninput="updateSummary()">
-  </div>
-
-  <div id="petFields" class="hidden">
-    <label>Pet Taxi Package</label>
-    <select id="petPackage" onchange="updateSummary()">
-      <option value="one">เที่ยวเดียว — 300 บาท</option>
-      <option value="return">ไป–กลับ — 500 บาท</option>
-    </select>
-
-    <label>Pet Type</label>
-    <input id="petType" placeholder="เช่น แมว / สุนัข"
-           oninput="updateSummary()">
-
-    <label>Number of Pets</label>
-    <input id="petCount" type="number" min="1" value="1"
-           oninput="updateSummary()">
-  </div>
-</section>
+<!-- =========================
+     STEP 1: DATE
+========================= -->
 
 <section>
-  <h2>2. Select Date</h2>
+  <h2>1. Select Date</h2>
 
   <div class="calhead">
     <button onclick="changeMonth(-1)">❮</button>
@@ -242,57 +276,244 @@ button:disabled { cursor:not-allowed; opacity:.4; }
   </div>
 
   <div class="week">
-    <span>SUN</span><span>MON</span><span>TUE</span>
-    <span>WED</span><span>THU</span><span>FRI</span><span>SAT</span>
+    <span>SUN</span>
+    <span>MON</span>
+    <span>TUE</span>
+    <span>WED</span>
+    <span>THU</span>
+    <span>FRI</span>
+    <span>SAT</span>
   </div>
 
   <div class="calendar" id="calendar"></div>
 
   <div class="legend">
-    <span><i class="dot" style="background:#dfe9dc"></i>Available</span>
-    <span><i class="dot" style="background:#f8e8aa"></i>Partial</span>
-    <span><i class="dot" style="background:#edc3bf"></i>Fully Booked</span>
+    <span>
+      <i class="dot" style="background:#dfe9dc"></i>
+      Available
+    </span>
+    <span>
+      <i class="dot" style="background:#f8e8aa"></i>
+      Partial
+    </span>
+    <span>
+      <i class="dot" style="background:#edc3bf"></i>
+      Fully Booked
+    </span>
   </div>
 
   <p id="calendarStatus" class="hint"></p>
 </section>
 
-<section id="timeSection" class="hidden">
-  <h2>3. Select Time</h2>
-  <p id="timeHint" class="hint">
-    กรุณาเลือกวันที่ก่อน
+<!-- =========================
+     STEP 2: SERVICE
+========================= -->
+
+<section id="serviceSection" class="hidden">
+  <h2>2. Select Service</h2>
+
+  <p class="hint">
+    Selected Date:
+    <strong id="selectedDateLabel"></strong>
   </p>
-  <div id="slots" class="slots"></div>
+
+  <div class="grid" id="serviceButtons">
+    <button class="choice" onclick="chooseService('private',this)">
+      🚗 Private Car
+    </button>
+
+    <button class="choice" onclick="chooseService('airport',this)">
+      ✈️ Airport Transfer
+    </button>
+
+    <button class="choice" onclick="chooseService('pet',this)">
+      🐾 Pet Taxi
+    </button>
+  </div>
 </section>
+
+<!-- =========================
+     STEP 3: PACKAGE & TIME
+========================= -->
+
+<section id="packageSection" class="hidden">
+  <h2>3. Select Package & Time</h2>
+
+  <!-- PRIVATE CAR -->
+  <div id="privateFields" class="hidden">
+
+    <label>Private Car Package</label>
+
+    <div class="grid" id="privateButtons">
+
+      <button class="choice"
+              data-package="full"
+              onclick="choosePackage('full',this)">
+        Full Day<br>
+        3,500 THB
+      </button>
+
+      <button class="choice"
+              data-package="am"
+              onclick="choosePackage('am',this)">
+        Half Day AM<br>
+        07:00–12:00<br>
+        1,900 THB
+      </button>
+
+      <button class="choice"
+              data-package="pm"
+              onclick="choosePackage('pm',this)">
+        Half Day PM<br>
+        13:00–18:00<br>
+        1,900 THB
+      </button>
+
+      <button class="choice"
+              data-package="single"
+              onclick="choosePackage('single',this)">
+        Single Trip<br>
+        เที่ยวเดียว<br>
+        สอบถามราคา
+      </button>
+
+      <button class="choice"
+              data-package="round"
+              onclick="choosePackage('round',this)">
+        Round Trip<br>
+        ไป–กลับ<br>
+        สอบถามราคา
+      </button>
+
+    </div>
+  </div>
+
+  <!-- AIRPORT -->
+  <div id="airportFields" class="hidden">
+
+    <p class="price">เริ่มต้น 600 บาท</p>
+
+    <label>Airport</label>
+    <select id="airport" onchange="updateSummary()">
+      <option value="">Select Airport</option>
+      <option value="BKK - Suvarnabhumi">
+        BKK - Suvarnabhumi
+      </option>
+      <option value="DMK - Don Mueang">
+        DMK - Don Mueang
+      </option>
+    </select>
+
+    <label>Transfer Type</label>
+    <select id="airportType" onchange="updateSummary()">
+      <option value="Arrival - รับจากสนามบิน">
+        Arrival - รับจากสนามบิน
+      </option>
+      <option value="Departure - ส่งสนามบิน">
+        Departure - ส่งสนามบิน
+      </option>
+    </select>
+
+    <label>Flight Number</label>
+    <input id="flight"
+           placeholder="เช่น TG123"
+           oninput="updateSummary()">
+
+    <label>Passengers</label>
+    <input id="passengers"
+           type="number"
+           min="1"
+           max="4"
+           placeholder="1–4 ท่าน"
+           oninput="updateSummary()">
+
+    <label>Luggage</label>
+    <input id="luggage"
+           placeholder="เช่น กระเป๋าใหญ่ 2 ใบ"
+           oninput="updateSummary()">
+  </div>
+
+  <!-- PET TAXI -->
+  <div id="petFields" class="hidden">
+
+    <label>Pet Taxi Package</label>
+    <select id="petPackage" onchange="updateSummary()">
+      <option value="one">
+        เที่ยวเดียว — 300 บาท
+      </option>
+      <option value="return">
+        ไป–กลับ — 500 บาท
+      </option>
+    </select>
+
+    <label>Pet Type</label>
+    <input id="petType"
+           placeholder="เช่น แมว / สุนัข"
+           oninput="updateSummary()">
+
+    <label>Number of Pets</label>
+    <input id="petCount"
+           type="number"
+           min="1"
+           value="1"
+           oninput="updateSummary()">
+  </div>
+
+  <!-- TIME -->
+  <div id="timeSection" class="hidden">
+    <label>Available Time</label>
+
+    <p id="timeHint" class="hint">
+      กรุณาเลือกแพ็กเกจ
+    </p>
+
+    <div id="slots" class="slots"></div>
+  </div>
+
+</section>
+
+<!-- =========================
+     STEP 4: GOOGLE MAPS
+========================= -->
 
 <section id="routeSection" class="hidden">
   <h2>4. Travel Details</h2>
 
   <label>Pickup Location (Google Maps)</label>
-  <input id="pickup" type="url"
+
+  <input id="pickup"
+         type="url"
          placeholder="วางลิงก์ Google Maps จุดรับ"
          oninput="updateSummary()">
 
   <label>Drop-off Location (Google Maps)</label>
-  <input id="dropoff" type="url"
+
+  <input id="dropoff"
+         type="url"
          placeholder="วางลิงก์ Google Maps จุดส่ง"
          oninput="updateSummary()">
 
   <p class="hint">
-    วิธีใช้งาน: เปิด Google Maps → เลือกสถานที่ →
+    เปิด Google Maps → เลือกสถานที่ →
     Share / แชร์ → Copy Link / คัดลอกลิงก์
   </p>
 
   <label>Additional Stops / Notes</label>
+
   <textarea id="notes"
             placeholder="จุดแวะเพิ่มเติมหรือรายละเอียดอื่น ๆ"
             oninput="updateSummary()"></textarea>
 </section>
 
+<!-- =========================
+     STEP 5: SUMMARY
+========================= -->
+
 <section id="summarySection" class="hidden">
-  <h2>Booking Summary</h2>
+  <h2>5. Booking Summary</h2>
 
   <div class="summary" id="summary"></div>
+
   <div class="price" id="price"></div>
 
   <p class="hint">
@@ -301,17 +522,21 @@ button:disabled { cursor:not-allowed; opacity:.4; }
     และยืนยันราคาสุทธิอีกครั้ง
   </p>
 
-  <button id="sendBtn" class="primary"
+  <button id="sendBtn"
+          class="primary"
           onclick="submitBooking()">
     Send Booking Request to LINE
   </button>
 
-  <p id="sendStatus" class="status" aria-live="polite"></p>
+  <p id="sendStatus"
+     class="status"
+     aria-live="polite"></p>
 </section>
 
 </main>
 
 <script>
+
 /* =========================
    CONFIGURATION
 ========================= */
@@ -322,7 +547,7 @@ const GAS_API_URL =
 'https://script.google.com/macros/s/AKfycbzdpANU6-SOSlRZ7h6PJI_m_h5TSmDhieq_MeywhE-TNW16VGB02VA6HRMX_Hz_QvTNeg/exec';
 
 const PRICES = {
-  private: {
+  private:{
     full:3500,
     am:1900,
     pm:1900,
@@ -336,25 +561,34 @@ const PRICES = {
   }
 };
 
-/* Full Day ตัวอย่าง 07:00–18:00
-   สามารถปรับเวลาให้ตรงกับบริการจริง */
+// ตัวอย่างเวลา Full Day 07:00–18:00
 const FULL_START = 7;
 const FULL_END = 18;
 
 const $ = id => document.getElementById(id);
 
 let liffReady = false;
+
 let service = '';
 let selectedPackage = '';
 let selectedDate = '';
 let selectedSlots = [];
+
 let daySlots = [];
 let monthData = {};
 let dayReady = false;
+let dateLoadToken = 0;
+let monthLoadToken = 0;
+let sending = false;
 
 const today = new Date();
+
 let viewYear = today.getFullYear();
 let viewMonth = today.getMonth();
+
+/* =========================
+   HELPERS
+========================= */
 
 function pad(n) {
   return String(n).padStart(2,'0');
@@ -364,20 +598,53 @@ function dateKey(y,m,d) {
   return y+'-'+pad(m+1)+'-'+pad(d);
 }
 
+function resetChoices() {
+  document.querySelectorAll('.choice').forEach(button => {
+    button.classList.remove('active');
+  });
+}
+
+function hideAfterDate() {
+  $('serviceSection').classList.add('hidden');
+  $('packageSection').classList.add('hidden');
+  $('privateFields').classList.add('hidden');
+  $('airportFields').classList.add('hidden');
+  $('petFields').classList.add('hidden');
+  $('timeSection').classList.add('hidden');
+  $('routeSection').classList.add('hidden');
+  $('summarySection').classList.add('hidden');
+}
+
+function resetBookingAfterDateChange() {
+  service = '';
+  selectedPackage = '';
+  selectedSlots = [];
+
+  resetChoices();
+  hideAfterDate();
+
+  $('sendStatus').textContent = '';
+}
+
 /* =========================
    LIFF
 ========================= */
 
 async function initLiff() {
   try {
-    await liff.init({liffId:LIFF_ID});
+    await liff.init({
+      liffId:LIFF_ID
+    });
 
     if (!liff.isLoggedIn()) {
-      liff.login({redirectUri:location.href});
+      liff.login({
+        redirectUri:location.href
+      });
       return;
     }
 
     liffReady = true;
+
   } catch(error) {
     console.error('LIFF:',error);
   }
@@ -389,9 +656,6 @@ async function initLiff() {
    Code.gs ต้องรองรับ:
    action=month
    action=day
-
-   หาก Code.gs เดิมใช้ชื่ออื่น
-   ให้ปรับส่วนนี้ให้ตรงกัน
 ========================= */
 
 async function apiGet(params) {
@@ -435,17 +699,21 @@ async function fetchDay(date) {
 }
 
 /* =========================
-   NORMALIZE API DATA
+   NORMALIZE DATA
 ========================= */
 
 function normalizeStatus(value) {
   const s = String(value || '').toLowerCase();
 
-  if (['full','booked','fullybooked','fully_booked'].includes(s)) {
+  if (
+    ['full','booked','fullybooked','fully_booked'].includes(s)
+  ) {
     return 'full';
   }
 
-  if (s === 'partial') return 'partial';
+  if (s === 'partial') {
+    return 'partial';
+  }
 
   return 'available';
 }
@@ -466,7 +734,9 @@ function normalizeMonth(data) {
         );
       }
     });
+
   } else if (raw && typeof raw === 'object') {
+
     Object.entries(raw).forEach(([key,value]) => {
       const day = Number(String(key).slice(-2));
 
@@ -491,8 +761,12 @@ function normalizeDay(data) {
   }
 
   return raw.map(item => {
+
     if (typeof item === 'string') {
-      return {time:item,available:true};
+      return {
+        time:item,
+        available:true
+      };
     }
 
     const time =
@@ -505,7 +779,9 @@ function normalizeDay(data) {
           : ''
       );
 
-    const status = String(item.status || '').toLowerCase();
+    const status = String(
+      item.status || ''
+    ).toLowerCase();
 
     return {
       time:time,
@@ -514,56 +790,8 @@ function normalizeDay(data) {
         item.booked !== true &&
         !['booked','unavailable','full'].includes(status)
     };
+
   }).filter(item => item.time);
-}
-
-/* =========================
-   SERVICE / PACKAGE
-========================= */
-
-function chooseService(value,button) {
-  service = value;
-  selectedPackage = '';
-  selectedSlots = [];
-
-  document.querySelectorAll('#serviceButtons .choice')
-    .forEach(el => el.classList.remove('active'));
-
-  button.classList.add('active');
-
-  $('privateFields').classList.toggle(
-    'hidden',service !== 'private'
-  );
-
-  $('airportFields').classList.toggle(
-    'hidden',service !== 'airport'
-  );
-
-  $('petFields').classList.toggle(
-    'hidden',service !== 'pet'
-  );
-
-  document.querySelectorAll('#privateButtons .choice')
-    .forEach(el => el.classList.remove('active'));
-
-  $('routeSection').classList.remove('hidden');
-  $('summarySection').classList.remove('hidden');
-
-  renderTime();
-  updateSummary();
-}
-
-function choosePackage(value,button) {
-  selectedPackage = value;
-  selectedSlots = [];
-
-  document.querySelectorAll('#privateButtons .choice')
-    .forEach(el => el.classList.remove('active'));
-
-  button.classList.add('active');
-
-  renderTime();
-  updateSummary();
 }
 
 /* =========================
@@ -572,11 +800,15 @@ function choosePackage(value,button) {
 
 function changeMonth(offset) {
   const next = new Date(
-    viewYear,viewMonth+offset,1
+    viewYear,
+    viewMonth+offset,
+    1
   );
 
   const current = new Date(
-    today.getFullYear(),today.getMonth(),1
+    today.getFullYear(),
+    today.getMonth(),
+    1
   );
 
   if (next < current) return;
@@ -588,8 +820,11 @@ function changeMonth(offset) {
 }
 
 async function loadMonth() {
+  const token = ++monthLoadToken;
+
   $('calendar').innerHTML = '';
-  $('calendarStatus').textContent = 'Loading calendar...';
+  $('calendarStatus').textContent =
+    'Loading calendar...';
 
   $('monthTitle').textContent = new Date(
     viewYear,viewMonth,1
@@ -600,14 +835,23 @@ async function loadMonth() {
 
   try {
     const data = await fetchMonth();
+
+    if (token !== monthLoadToken) return;
+
     monthData = normalizeMonth(data);
 
     $('calendarStatus').textContent = '';
+
     renderCalendar();
+
   } catch(error) {
+    if (token !== monthLoadToken) return;
+
     console.error(error);
+
     $('calendarStatus').textContent =
-      'ไม่สามารถโหลดข้อมูลปฏิทินได้ กรุณาตรวจสอบ Google Apps Script API';
+      'ไม่สามารถโหลดปฏิทินได้ กรุณาตรวจสอบ Google Apps Script API';
+
     $('calendarStatus').className = 'hint error';
   }
 }
@@ -625,7 +869,9 @@ function renderCalendar() {
   ).getDate();
 
   for (let i=0;i<first;i++) {
-    container.appendChild(document.createElement('span'));
+    container.appendChild(
+      document.createElement('span')
+    );
   }
 
   const todayString = dateKey(
@@ -635,10 +881,16 @@ function renderCalendar() {
   );
 
   for (let day=1;day<=count;day++) {
-    const date = dateKey(viewYear,viewMonth,day);
-    const status = monthData[day] || 'available';
+    const date = dateKey(
+      viewYear,viewMonth,day
+    );
 
-    const button = document.createElement('button');
+    const status =
+      monthData[day] || 'available';
+
+    const button =
+      document.createElement('button');
+
     button.className = 'day '+status;
     button.textContent = day;
 
@@ -646,45 +898,173 @@ function renderCalendar() {
       button.classList.add('selected');
     }
 
-    if (date < todayString || status === 'full') {
+    if (
+      date < todayString ||
+      status === 'full'
+    ) {
       button.disabled = true;
     }
 
     button.onclick = () => selectDate(date);
+
     container.appendChild(button);
   }
 }
 
+/* =========================
+   STEP 1: SELECT DATE
+
+   เลือกวันก่อนเท่านั้น
+   โหลดข้อมูลสำเร็จจึงแสดง Service
+========================= */
+
 async function selectDate(date) {
+  const token = ++dateLoadToken;
+
   selectedDate = date;
-  selectedSlots = [];
   daySlots = [];
   dayReady = false;
 
+  resetBookingAfterDateChange();
+
+  $('selectedDateLabel').textContent = date;
+
   renderCalendar();
 
-  $('timeSection').classList.remove('hidden');
-  $('timeHint').textContent = 'Loading available times...';
-  $('slots').innerHTML = '';
+  $('calendarStatus').className = 'hint';
+  $('calendarStatus').textContent =
+    'กำลังตรวจสอบคิววันที่ '+date+'...';
 
   try {
     const data = await fetchDay(date);
 
+    if (token !== dateLoadToken) return;
+
     daySlots = normalizeDay(data);
     dayReady = true;
 
-    renderTime();
-    updateSummary();
+    $('calendarStatus').textContent =
+      'เลือกวันที่ '+date+' เรียบร้อยแล้ว';
+
+    // แสดง Step 2 หลังเลือกวันสำเร็จ
+    $('serviceSection').classList.remove('hidden');
+
   } catch(error) {
+    if (token !== dateLoadToken) return;
+
     console.error(error);
-    $('timeHint').textContent =
-      'ไม่สามารถโหลดช่วงเวลาว่างได้ กรุณาตรวจสอบ API';
-    $('timeHint').className = 'hint error';
+
+    $('calendarStatus').textContent =
+      'ไม่สามารถโหลดคิวของวันที่เลือกได้ กรุณาลองใหม่';
+
+    $('calendarStatus').className = 'hint error';
   }
 }
 
 /* =========================
-   TIME SELECTION
+   STEP 2: SELECT SERVICE
+========================= */
+
+function chooseService(value,button) {
+  if (!selectedDate || !dayReady) {
+    alert('กรุณาเลือกวันที่ก่อน');
+    return;
+  }
+
+  service = value;
+  selectedPackage = '';
+  selectedSlots = [];
+
+  document.querySelectorAll(
+    '#serviceButtons .choice'
+  ).forEach(el => {
+    el.classList.remove('active');
+  });
+
+  button.classList.add('active');
+
+  document.querySelectorAll(
+    '#privateButtons .choice'
+  ).forEach(el => {
+    el.classList.remove('active');
+  });
+
+  $('packageSection').classList.remove('hidden');
+
+  $('privateFields').classList.toggle(
+    'hidden',
+    service !== 'private'
+  );
+
+  $('airportFields').classList.toggle(
+    'hidden',
+    service !== 'airport'
+  );
+
+  $('petFields').classList.toggle(
+    'hidden',
+    service !== 'pet'
+  );
+
+  $('timeSection').classList.toggle(
+    'hidden',
+    service === 'private'
+  );
+
+  $('routeSection').classList.remove('hidden');
+  $('summarySection').classList.remove('hidden');
+
+  updatePackageAvailability();
+  renderTime();
+  updateSummary();
+}
+
+/* =========================
+   STEP 3: PACKAGE
+========================= */
+
+function choosePackage(value,button) {
+  if (!service || !dayReady) return;
+
+  if (
+    ['full','am','pm'].includes(value) &&
+    !packageAvailable(value)
+  ) {
+    alert('แพ็กเกจนี้มีช่วงเวลาที่ไม่ว่างแล้ว');
+    return;
+  }
+
+  selectedPackage = value;
+  selectedSlots = [];
+
+  document.querySelectorAll(
+    '#privateButtons .choice'
+  ).forEach(el => {
+    el.classList.remove('active');
+  });
+
+  button.classList.add('active');
+
+  renderTime();
+  updateSummary();
+}
+
+function updatePackageAvailability() {
+  document.querySelectorAll(
+    '#privateButtons [data-package]'
+  ).forEach(button => {
+
+    const type = button.dataset.package;
+
+    button.disabled =
+      ['full','am','pm'].includes(type) &&
+      !packageAvailable(type);
+
+  });
+}
+
+/* =========================
+   TIME HELPERS
 ========================= */
 
 function canonical(time) {
@@ -699,12 +1079,15 @@ function packageHours(type) {
   if (type === 'full') {
     start = FULL_START;
     end = FULL_END;
+
   } else if (type === 'am') {
     start = 7;
     end = 12;
+
   } else if (type === 'pm') {
     start = 13;
     end = 18;
+
   } else {
     return [];
   }
@@ -722,8 +1105,9 @@ function packageHours(type) {
 
 function packageAvailable(type) {
   const available = new Set(
-    daySlots.filter(s => s.available)
-      .map(s => canonical(s.time))
+    daySlots
+      .filter(slot => slot.available)
+      .map(slot => canonical(slot.time))
   );
 
   return packageHours(type).every(
@@ -742,36 +1126,45 @@ function needsTimeSlots() {
   );
 }
 
+/* =========================
+   RENDER TIME
+========================= */
+
 function renderTime() {
-  if (!selectedDate || !service) {
+  const container = $('slots');
+
+  container.innerHTML = '';
+
+  if (!service || !dayReady) {
+    $('timeSection').classList.add('hidden');
+    return;
+  }
+
+  if (
+    service === 'private' &&
+    !selectedPackage
+  ) {
     $('timeSection').classList.add('hidden');
     return;
   }
 
   $('timeSection').classList.remove('hidden');
 
-  const container = $('slots');
-  container.innerHTML = '';
-
-  if (!dayReady) {
-    $('timeHint').textContent = 'Loading available times...';
-    return;
-  }
-
   if (
     service === 'private' &&
     ['full','am','pm'].includes(selectedPackage)
   ) {
-    $('timeHint').textContent = packageAvailable(selectedPackage)
-      ? 'แพ็กเกจนี้สามารถส่งคำขอจองได้'
-      : 'แพ็กเกจนี้มีช่วงเวลาที่ไม่ว่าง กรุณาเลือกแพ็กเกจอื่น';
+    $('timeHint').textContent =
+      packageAvailable(selectedPackage)
+        ? 'แพ็กเกจนี้สามารถส่งคำขอจองได้'
+        : 'แพ็กเกจนี้มีช่วงเวลาที่ไม่ว่าง';
 
     return;
   }
 
   if (!needsTimeSlots()) {
     $('timeHint').textContent =
-      'กรุณาเลือกแพ็กเกจก่อน';
+      'กรุณาเลือกแพ็กเกจ';
     return;
   }
 
@@ -779,11 +1172,14 @@ function renderTime() {
     'เลือกช่วงเวลาที่ต้องการ (เลือกได้หลายช่วง)';
 
   daySlots.forEach(slot => {
-    const button = document.createElement('button');
+    const button =
+      document.createElement('button');
 
     button.className = 'slot';
+
     button.textContent =
-      slot.time+(slot.available?'':' Booked');
+      slot.time+
+      (slot.available ? '' : ' Booked');
 
     button.disabled = !slot.available;
 
@@ -796,15 +1192,18 @@ function renderTime() {
     }
 
     button.onclick = () => {
+
       if (selectedSlots.includes(slot.time)) {
         selectedSlots = selectedSlots.filter(
           value => value !== slot.time
         );
+
       } else {
         selectedSlots.push(slot.time);
       }
 
       selectedSlots.sort();
+
       renderTime();
       updateSummary();
     };
@@ -834,9 +1233,14 @@ function getPrice() {
 }
 
 function priceLabel() {
-  if (!service) return 'กรุณาเลือกบริการ';
+  if (!service) {
+    return 'กรุณาเลือกบริการ';
+  }
 
-  if (service === 'private' && !selectedPackage) {
+  if (
+    service === 'private' &&
+    !selectedPackage
+  ) {
     return 'กรุณาเลือกแพ็กเกจ';
   }
 
@@ -846,7 +1250,9 @@ function priceLabel() {
     return 'สอบถามราคา';
   }
 
-  return 'เริ่มต้น '+price.toLocaleString('en-US')+' บาท';
+  return 'เริ่มต้น '+
+    price.toLocaleString('en-US')+
+    ' บาท';
 }
 
 /* =========================
@@ -880,11 +1286,14 @@ function bookingMessage() {
   ];
 
   if (service === 'private') {
-    lines.push('📦 Package: '+packageName());
+    lines.push(
+      '📦 Package: '+packageName()
+    );
 
     if (selectedPackage === 'full') {
       lines.push(
-        '🕒 Time: '+pad(FULL_START)+':00–'+
+        '🕒 Time: '+
+        pad(FULL_START)+':00–'+
         pad(FULL_END)+':00'
       );
     }
@@ -917,7 +1326,8 @@ function bookingMessage() {
 
   if (service === 'pet') {
     lines.push(
-      '🐾 Package: '+(
+      '🐾 Package: '+
+      (
         $('petPackage').value === 'return'
           ? 'Round Trip (ไป–กลับ)'
           : 'Single Trip (เที่ยวเดียว)'
@@ -954,7 +1364,7 @@ function updateSummary() {
 }
 
 /* =========================
-   VALIDATION
+   GOOGLE MAPS VALIDATION
 ========================= */
 
 function validMapsLink(value) {
@@ -970,18 +1380,23 @@ function validMapsLink(value) {
       host === 'google.co.th' ||
       host.endsWith('.google.co.th')
     );
+
   } catch(error) {
     return false;
   }
 }
 
+/* =========================
+   VALIDATE BOOKING
+========================= */
+
 function validateBooking() {
-  if (!service) {
-    return 'กรุณาเลือกประเภทบริการ';
+  if (!selectedDate || !dayReady) {
+    return 'กรุณาเลือกวันที่ก่อน';
   }
 
-  if (!selectedDate || !dayReady) {
-    return 'กรุณาเลือกวันที่และรอโหลดช่วงเวลาว่าง';
+  if (!service) {
+    return 'กรุณาเลือกประเภทบริการ';
   }
 
   if (service === 'private') {
@@ -1003,10 +1418,16 @@ function validateBooking() {
     }
 
     const available = new Set(
-      daySlots.filter(s => s.available).map(s => s.time)
+      daySlots
+        .filter(slot => slot.available)
+        .map(slot => slot.time)
     );
 
-    if (selectedSlots.some(s => !available.has(s))) {
+    if (
+      selectedSlots.some(
+        time => !available.has(time)
+      )
+    ) {
       return 'มีช่วงเวลาที่เลือกไม่ว่างแล้ว';
     }
   }
@@ -1016,22 +1437,27 @@ function validateBooking() {
       return 'กรุณาเลือกสนามบิน';
     }
 
-    const passengers = Number($('passengers').value);
+    const passengers =
+      Number($('passengers').value);
 
     if (
       !Number.isInteger(passengers) ||
       passengers < 1 ||
       passengers > 4
     ) {
-      return 'กรุณาระบุจำนวนผู้โดยสาร 1–4 ท่าน';
+      return 'กรุณาระบุผู้โดยสาร 1–4 ท่าน';
     }
   }
 
   if (service === 'pet') {
-    const count = Number($('petCount').value);
+    const count =
+      Number($('petCount').value);
 
-    if (!Number.isInteger(count) || count < 1) {
-      return 'กรุณาระบุจำนวนสัตว์เลี้ยงให้ถูกต้อง';
+    if (
+      !Number.isInteger(count) ||
+      count < 1
+    ) {
+      return 'กรุณาระบุจำนวนสัตว์เลี้ยง';
     }
 
     if (!$('petType').value.trim()) {
@@ -1055,6 +1481,8 @@ function validateBooking() {
 ========================= */
 
 async function submitBooking() {
+  if (sending) return;
+
   const status = $('sendStatus');
   const button = $('sendBtn');
 
@@ -1069,29 +1497,38 @@ async function submitBooking() {
     return;
   }
 
-  if (!liffReady || !liff.isInClient()) {
+  if (
+    !liffReady ||
+    !liff.isInClient()
+  ) {
     status.textContent =
       'กรุณาเปิดหน้าจองผ่าน LIFF URL ภายใน LINE';
+
     status.className = 'status error';
     return;
   }
 
+  sending = true;
   button.disabled = true;
-  status.textContent = 'กำลังตรวจสอบคิว...';
+
+  status.textContent =
+    'กำลังตรวจสอบคิวล่าสุด...';
 
   try {
-    // ตรวจสอบช่วงเวลาล่าสุดอีกครั้งก่อนส่ง
     const latest = await fetchDay(selectedDate);
+
     daySlots = normalizeDay(latest);
 
     error = validateBooking();
 
     if (error) {
+      updatePackageAvailability();
       renderTime();
       throw new Error(error);
     }
 
-    status.textContent = 'กำลังส่งคำขอจอง...';
+    status.textContent =
+      'กำลังส่งคำขอจองเข้า LINE...';
 
     await liff.sendMessages([
       {
@@ -1103,8 +1540,8 @@ async function submitBooking() {
     status.textContent =
       '✅ ส่งคำขอจองเข้า LINE สำเร็จแล้วค่ะ';
 
-    // ยังไม่ถือว่าเป็นการยืนยันจอง
-    // รอผู้ให้บริการตรวจสอบและยืนยันอีกครั้ง
+    // เป็นคำขอจองเท่านั้น
+    // ยังไม่ใช่การยืนยันการจอง
 
   } catch(error) {
     console.error(error);
@@ -1115,6 +1552,7 @@ async function submitBooking() {
     status.className = 'status error';
 
   } finally {
+    sending = false;
     button.disabled = false;
   }
 }
@@ -1127,5 +1565,6 @@ initLiff();
 loadMonth();
 
 </script>
+
 </body>
 </html>
